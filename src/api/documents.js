@@ -1,24 +1,24 @@
-// API Users static class
-export default class ApiUsers {
-  // get a list of users
+// API Documents static class
+export default class ApiDocuments {
+  // get a list of documents
   static getList() {
     return new Promise(resolve => {
       setTimeout(() => {
-        // build some dummy users list
-        let users = [];
+        // build some dummy documents list
+        let documents = [];
         for (let x = 1; x <= 28; x++) {
-          users.push({
+          documents.push({
             id: x,
-            username: 'Johny ' + x,
+            documentname: 'Johny ' + x,
             job: 'Employee ' + x,
           });
         }
-        resolve(users);
+        resolve(documents);
       }, 1000);
     });
   }
 
-  // add/edit a user
+  // add/edit a document
   static addEdit() {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -28,7 +28,7 @@ export default class ApiUsers {
     });
   }
 
-  // delete a user
+  // delete a document
   static delete() {
     return new Promise(resolve => {
       setTimeout(() => {

@@ -2,25 +2,25 @@ import React, { PropTypes } from "react";
 import { Link } from "react-router";
 import { Button, Glyphicon } from "react-bootstrap";
 
-// User List Element component
-export default class UserListElement extends React.Component {
+// Document List Element component
+export default class DocumentListElement extends React.Component {
   // render
   render() {
-    const {user, showDelete} = this.props;
+    const {document, showDelete} = this.props;
     return (
       <tr>
-        <td>#{user.id}</td>
-        <td>{user.username}</td>
-        <td>{user.job}</td>
+        <td>#{document.id}</td>
+        <td>{document.documentname}</td>
+        <td>{document.job}</td>
         <td>
-          <Link to={'user-edit/' + user.id}>
+          <Link to={'document-edit/' + document.id}>
             <Button bsSize="xsmall">
               Edit <Glyphicon glyph="edit"/>
             </Button>
           </Link>
         </td>
         <td>
-          <Button bsSize="xsmall" className="user-delete" onClick={() => showDelete(user)}>
+          <Button bsSize="xsmall" className="document-delete" onClick={() => showDelete(document)}>
             Delete <Glyphicon glyph="remove-circle"/>
           </Button>
         </td>
@@ -30,7 +30,7 @@ export default class UserListElement extends React.Component {
 }
 
 // prop checks
-UserListElement.propTypes = {
-  user: PropTypes.object.isRequired,
+DocumentListElement.propTypes = {
+  document: PropTypes.object.isRequired,
   showDelete: PropTypes.func.isRequired,
 }

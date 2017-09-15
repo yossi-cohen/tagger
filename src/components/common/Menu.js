@@ -13,9 +13,9 @@ export default class Menu extends React.Component {
             Home
           </NavItem>
         </IndexLinkContainer>
-        <LinkContainer to="/user-edit">
+        <LinkContainer to="/document-edit">
           <NavItem>
-            Add User <Glyphicon glyph="plus-sign"/>
+            Add Document <Glyphicon glyph="plus-sign"/>
           </NavItem>
         </LinkContainer>
         <NavItem href="http://redux-minimal.js.org/" target="_blank">

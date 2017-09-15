@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import assert from "assert";
-import Home from "../../src_users/components/Home";
+import Home from "../../src_documents/components/Home";
 
 // unit tests for the Home component
 describe('Home component', () => {
