@@ -12,12 +12,12 @@ describe('Documents reducer', () => {
           type: 'USERS_LIST_SAVE',
           documents: [{
             id: 1,
-            documentname: 'Some name',
+            documentName: 'Some name',
             job: 'Some job',
           }],
         }), [{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }]
       );
@@ -29,22 +29,22 @@ describe('Documents reducer', () => {
       assert.deepEqual(
         documents([{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }], {
           type: 'USERS_ADD_SAVE',
           document: {
             id: 2,
-            documentname: 'Other name',
+            documentName: 'Other name',
             job: 'Other job',
           },
         }), [{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }, {
           id: 2,
-          documentname: 'Other name',
+          documentName: 'Other name',
           job: 'Other job',
         }]
       );
@@ -56,26 +56,26 @@ describe('Documents reducer', () => {
       assert.deepEqual(
         documents([{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }, {
           id: 2,
-          documentname: 'Other name',
+          documentName: 'Other name',
           job: 'Other job',
         }], {
           type: 'USERS_EDIT_SAVE',
           document: {
             id: 2,
-            documentname: 'Changed name',
+            documentName: 'Changed name',
             job: 'Changed job',
           },
         }), [{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }, {
           id: 2,
-          documentname: 'Changed name',
+          documentName: 'Changed name',
           job: 'Changed job',
         }]
       );
@@ -87,18 +87,18 @@ describe('Documents reducer', () => {
       assert.deepEqual(
         documents([{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }, {
           id: 2,
-          documentname: 'Other name',
+          documentName: 'Other name',
           job: 'Other job',
         }], {
           type: 'USERS_DELETE_SAVE',
           document_id: 2,
         }), [{
           id: 1,
-          documentname: 'Some name',
+          documentName: 'Some name',
           job: 'Some job',
         }]
       );

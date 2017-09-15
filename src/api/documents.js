@@ -9,7 +9,7 @@ export default class ApiDocuments {
         for (let x = 1; x <= 28; x++) {
           documents.push({
             id: x,
-            documentname: 'Johny ' + x,
+            documentName: 'Document-' + x,
             job: 'Employee ' + x,
           });
         }

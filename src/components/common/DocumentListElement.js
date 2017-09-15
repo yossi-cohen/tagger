@@ -9,8 +9,8 @@ export default class DocumentListElement extends React.Component {
     const {document, showDelete} = this.props;
     return (
       <tr>
-        <td>#{document.id}</td>
-        <td>{document.documentname}</td>
+        <td>{document.id}</td>
+        <td>{document.documentName}</td>
         <td>{document.job}</td>
         <td>
           <Link to={'document-edit/' + document.id}>

@@ -23,7 +23,7 @@ export class DocumentEdit extends React.Component {
       <div className="page-document-edit">
         <PageHeader>{'Document ' + (document.id ? 'edit' : 'add')}</PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
-          <Field component={FormField} name="documentname" label="Documentname" doValidate={true}/>
+          <Field component={FormField} name="documentName" label="Document Name" doValidate={true}/>
           <Field component={FormField} name="job" label="Job"/>
           <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..."
             buttonSave="Save Document"/>
@@ -40,7 +40,7 @@ export class DocumentEdit extends React.Component {
         type: 'USERS_ADD_EDIT',
         document: {
           id: values.id || 0,
-          documentname: values.documentname,
+          documentName: values.documentName,
           job: values.job,
         },
         callbackError: (error) => {
@@ -60,8 +60,8 @@ const DocumentEditForm = reduxForm({
   form: 'document_edit',
   validate: function (values) {
     const errors = {};
-    if (!values.documentname) {
-      errors.documentname = 'Documentname is required';
+    if (!values.documentName) {
+      errors.documentName = 'Document Name is required';
     }
     return errors;
   },

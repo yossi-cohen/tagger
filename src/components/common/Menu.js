@@ -18,9 +18,6 @@ export default class Menu extends React.Component {
             Add Document <Glyphicon glyph="plus-sign"/>
           </NavItem>
         </LinkContainer>
-        <NavItem href="http://redux-minimal.js.org/" target="_blank">
-          redux-minimal
-        </NavItem>
       </Nav>
     );
   }

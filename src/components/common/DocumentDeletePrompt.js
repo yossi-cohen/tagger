@@ -10,7 +10,7 @@ export default class DocumentDeletePrompt extends React.Component {
       <Modal show={show}>
         <Modal.Header>
           <Modal.Title>
-            Are you sure you want to delete <strong>{document.documentname}</strong>?
+            Are you sure you want to delete <strong>{document.documentName}</strong>?
           </Modal.Title>
         </Modal.Header>
         <Modal.Footer>

@@ -40,7 +40,7 @@ export class DocumentList extends React.Component {
           <thead>
           <tr>
             <th>ID</th>
-            <th>Documentname</th>
+            <th>Document Name</th>
             <th>Job</th>
             <th>Edit</th>
             <th>Delete</th>
