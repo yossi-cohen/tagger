@@ -114,4 +114,5 @@ function mapStateToProps(state) {
     page: Number(state.routing.locationBeforeTransitions.query.page) || 1,
   };
 }
+
 export default connect(mapStateToProps)(UserList);
