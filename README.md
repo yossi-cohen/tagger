@@ -36,13 +36,13 @@ body: {
 
 ### rename document
 ```
-PUT /document/<doc-id>
+PUT /documents/<doc-id>
     ?name=<new-name>        // validate name
 ```
 
 ### delete document
 ```
-DELETE /document/<doc-id>
+DELETE /documents/<doc-id>
 ```
 
 ### get documents 
@@ -108,10 +108,14 @@ returns '<label>'
 ```
 
 ### set token-entity-label
-<br/>implicitly supports add/delete label
 ```
-PUT /document/<doc-id>/<token-index>/entities/labels
+PUT /documents/<doc-id>/<token-index>/entities/labels
     ?label='<label>'
+```
+
+### delete token-entity-label
+```
+DELETE /documents/<doc-id>/<token-index>/entities/labels
 ```
 
 ### get entities
