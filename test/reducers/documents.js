@@ -13,10 +13,12 @@ describe('Documents reducer', () => {
           documents: [{
             id: 1,
             documentName: 'Some name',
+            documentText: '',
           }],
         }), [{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }]
       );
     });
@@ -28,18 +30,22 @@ describe('Documents reducer', () => {
         documents([{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }], {
           type: 'USERS_ADD_SAVE',
           document: {
             id: 2,
             documentName: 'Other name',
+            documentText: '',
           },
         }), [{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }, {
           id: 2,
           documentName: 'Other name',
+          documentText: '',
         }]
       );
     });
@@ -51,21 +57,26 @@ describe('Documents reducer', () => {
         documents([{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }, {
           id: 2,
           documentName: 'Other name',
+          documentText: '',
         }], {
           type: 'USERS_EDIT_SAVE',
           document: {
             id: 2,
             documentName: 'Changed name',
+            documentText: '',
           },
         }), [{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }, {
           id: 2,
           documentName: 'Changed name',
+          documentText: '',
         }]
       );
     });
@@ -77,15 +88,18 @@ describe('Documents reducer', () => {
         documents([{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }, {
           id: 2,
           documentName: 'Other name',
+          documentText: '',
         }], {
           type: 'USERS_DELETE_SAVE',
           document_id: 2,
         }), [{
           id: 1,
           documentName: 'Some name',
+          documentText: '',
         }]
       );
     });

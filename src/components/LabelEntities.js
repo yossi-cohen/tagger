@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
-import { PageHeader } from "react-bootstrap";
+import { PageHeader, Panel } from "react-bootstrap";
 
 // Document add/edit page component
 export class LabelEntities extends React.Component {
@@ -16,6 +16,10 @@ export class LabelEntities extends React.Component {
     return (
       <div className="page-label-entities">
         <PageHeader>{'Entities: Document ' + (document.id ? document.id : '(doc-id undefined)')}</PageHeader>
+        <Panel>
+          {this.props.document.documentText}
+        </Panel>
+
       </div>
     );
   }
