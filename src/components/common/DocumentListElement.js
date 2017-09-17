@@ -13,6 +13,20 @@ export default class DocumentListElement extends React.Component {
         <td>{document.documentName}</td>
         <td>{document.job}</td>
         <td>
+          <Link to={'label-entities/' + document.id}>
+            <Button bsSize="xsmall">
+              Label <Glyphicon glyph="user"/>
+            </Button>
+          </Link>
+        </td>
+        <td>
+          <Link to={'label-relations/' + document.id}>
+            <Button bsSize="xsmall">
+            Label <Glyphicon glyph="link"/>
+            </Button>
+          </Link>
+        </td>
+        <td>
           <Link to={'document-edit/' + document.id}>
             <Button bsSize="xsmall">
               Edit <Glyphicon glyph="edit"/>

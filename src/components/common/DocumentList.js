@@ -42,6 +42,8 @@ export class DocumentList extends React.Component {
             <th>ID</th>
             <th>Document Name</th>
             <th>Job</th>
+            <th>Label Entities</th>
+            <th>Label Relations</th>
             <th>Edit</th>
             <th>Delete</th>
           </tr>
