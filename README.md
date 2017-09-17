@@ -181,3 +181,11 @@ mention = {
     tokens: ['<token-indices>']
 }
 ```
+
+## TODO
+- rename document in-place
+- add tag-entities button
+- mock API calls
+- prototype tag-entities page
+- prototype relations page
+
