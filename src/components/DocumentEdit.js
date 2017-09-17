@@ -24,7 +24,6 @@ export class DocumentEdit extends React.Component {
         <PageHeader>{'Document ' + (document.id ? 'edit' : 'add')}</PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
           <Field component={FormField} name="documentName" label="Document Name" doValidate={true}/>
-          <Field component={FormField} name="job" label="Job"/>
           <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..."
             buttonSave="Save Document"/>
         </Form>
@@ -41,7 +40,6 @@ export class DocumentEdit extends React.Component {
         document: {
           id: values.id || 0,
           documentName: values.documentName,
-          job: values.job,
         },
         callbackError: (error) => {
           reject(new SubmissionError({_error: error}));

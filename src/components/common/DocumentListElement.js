@@ -11,7 +11,6 @@ export default class DocumentListElement extends React.Component {
       <tr>
         <td>{document.id}</td>
         <td>{document.documentName}</td>
-        <td>{document.job}</td>
         <td>
           <Link to={'label-entities/' + document.id}>
             <Button bsSize="xsmall">

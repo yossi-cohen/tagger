@@ -13,12 +13,10 @@ describe('Documents reducer', () => {
           documents: [{
             id: 1,
             documentName: 'Some name',
-            job: 'Some job',
           }],
         }), [{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }]
       );
     });
@@ -30,22 +28,18 @@ describe('Documents reducer', () => {
         documents([{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }], {
           type: 'USERS_ADD_SAVE',
           document: {
             id: 2,
             documentName: 'Other name',
-            job: 'Other job',
           },
         }), [{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }, {
           id: 2,
           documentName: 'Other name',
-          job: 'Other job',
         }]
       );
     });
@@ -57,26 +51,21 @@ describe('Documents reducer', () => {
         documents([{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }, {
           id: 2,
           documentName: 'Other name',
-          job: 'Other job',
         }], {
           type: 'USERS_EDIT_SAVE',
           document: {
             id: 2,
             documentName: 'Changed name',
-            job: 'Changed job',
           },
         }), [{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }, {
           id: 2,
           documentName: 'Changed name',
-          job: 'Changed job',
         }]
       );
     });
@@ -88,18 +77,15 @@ describe('Documents reducer', () => {
         documents([{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }, {
           id: 2,
           documentName: 'Other name',
-          job: 'Other job',
         }], {
           type: 'USERS_DELETE_SAVE',
           document_id: 2,
         }), [{
           id: 1,
           documentName: 'Some name',
-          job: 'Some job',
         }]
       );
     });

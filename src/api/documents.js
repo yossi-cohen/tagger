@@ -10,7 +10,6 @@ export default class ApiDocuments {
           documents.push({
             id: x,
             documentName: 'Document-' + x,
-            job: 'Employee ' + x,
           });
         }
         resolve(documents);
