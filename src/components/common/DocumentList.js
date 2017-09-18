@@ -95,7 +95,7 @@ export class DocumentList extends React.Component {
   documentDelete() {
     // delete the document
     this.props.dispatch({
-      type: 'USERS_DELETE',
+      type: 'DOCUMENTS_DELETE',
       document_id: this.state.delete_document.id,
     });
 

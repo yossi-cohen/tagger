@@ -1,3 +1,6 @@
+import config from '../config/config';
+const url = config[process.env.NODE_ENV].api + '/tokens';
+
 // API Documents static class
 export default class ApiDocuments {
   // get a list of documents
@@ -35,6 +38,20 @@ export default class ApiDocuments {
         // do something here
         resolve();
       }, 500);
+    });
+  }
+
+  // lilo: get document tokens
+  static getTokens(documentId) {
+    return new Promise(reject, resolve => {
+      fetch(url, {})
+      .then(response => {
+          return response.json()
+      })
+      .then(json => {
+        resolve(json.tokens);
+      })
+      .catch(err => reject(err))
     });
   }
 }

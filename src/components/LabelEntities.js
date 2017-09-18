@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import { PageHeader, Panel } from "react-bootstrap";
 
+import { documentsGetTokens } from "../../src/sagas/documents";
+
 // Document add/edit page component
 export class LabelEntities extends React.Component {
   // constructor
