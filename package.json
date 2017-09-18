@@ -18,7 +18,8 @@
     "build-dev": "webpack --config webpack.dev.config.js",
     "build-prod": "webpack -p --config webpack.prod.config.js",
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill --require ignore-styles",
-    "test-watch": "npm test -- --watch"
+    "test-watch": "npm test -- --watch",
+    "api": "json-server --watch src/api/db.json --port 3004"
   },
   "babel": {
     "presets": [
@@ -55,6 +56,7 @@
     "enzyme": "^2.7.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "ignore-styles": "^5.0.1",
+    "json-server": "^0.12.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.3.0",
     "react-addons-test-utils": "^15.4.2",
