@@ -1,10 +1,9 @@
 import uuid
 
 import elasticsearch
-from flask import Flask, flash, jsonify, request
+from flask import Flask, jsonify, request
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
-import json
 
 from backend import FileUtils
 from backend.Database import Document
@@ -52,7 +51,6 @@ def get_document(document_id):
       pass
     return "{} DELETED".format(document_id)
 
-
   if request.method == 'PUT':
     doc_name = request.args.get('name')
     doc = Document.get(id = document_id)
@@ -71,10 +69,13 @@ def get_document_text(document_id):
 
 @app.route('/documents', methods = ['POST'])
 def insert_new_document():
+  if not 'file' in request.files:
+    return abort(400, 'No selected file')
+
   file = request.files['file']
 
   if file.filename == '':
-    flash('No selected file')
+    return abort(400, 'No selected file')
   if file and allowed_file(file.filename):
     filename = secure_filename(file.filename)
     text = FileUtils.parse_file(file)
