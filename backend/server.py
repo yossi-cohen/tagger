@@ -1,5 +1,6 @@
 import uuid
 
+import elasticsearch
 from flask import Flask, flash, jsonify, request
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -45,7 +46,10 @@ def get_document_internal(document_id):
 @app.route('/documents/<document_id>', methods = ['GET', 'DELETE', 'PUT'])
 def get_document(document_id):
   if request.method == 'DELETE':
-    Document(meta = {'id': document_id}).delete()
+    try:
+      Document(meta = {'id': document_id}).delete()
+    except elasticsearch.exceptions.NotFoundError:
+      pass
     return "{} DELETED".format(document_id)
 
   if request.method == 'PUT':
