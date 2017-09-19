@@ -1,4 +1,4 @@
-import config from '../config/config';
+import config from '../../src/config/config';
 const url = config[process.env.NODE_ENV].api + '/tokens';
 
 // API Documents static class
