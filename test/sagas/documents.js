@@ -1,7 +1,11 @@
 import { call, put } from "redux-saga/effects";
 import assert from "assert";
-import { documentsFetchList, documentsAddEdit, documentsDelete } from "../../src_documents/sagas/documents";
-import ApiDocuments from "../../src_documents/api/documents";
+import ApiDocuments from "../../src/api/documents";
+import { 
+  documentsFetchList, 
+  documentsAddEdit, 
+  documentsDelete, 
+  documentsGetTokens } from "../../src/sagas/documents";
 
 // unit tests for the documents saga
 describe('Documents saga', () => {
@@ -12,8 +16,8 @@ describe('Documents saga', () => {
       assert.deepEqual(generator.next().value, call(ApiDocuments.getList));
     });
 
-    it('should return the USERS_LIST_SAVE action', () => {
-      assert.deepEqual(generator.next().value, put({type: 'USERS_LIST_SAVE', documents: undefined}));
+    it('should return the DOCUMENTS_LIST_SAVE action', () => {
+      assert.deepEqual(generator.next().value, put({type: 'DOCUMENTS_LIST_SAVE', documents: undefined}));
     });
 
     it('should be finished', () => {
@@ -32,9 +36,9 @@ describe('Documents saga', () => {
       assert.deepEqual(generator.next().value, call(ApiDocuments.addEdit));
     });
 
-    it('should return the USERS_ADD_SAVE action', () => {
+    it('should return the DOCUMENTS_ADD_SAVE action', () => {
       assert.deepEqual(generator.next().value, put({
-        type: 'USERS_ADD_SAVE',
+        type: 'DOCUMENTS_ADD_SAVE',
         document: action.document,
       }));
     });
@@ -55,9 +59,9 @@ describe('Documents saga', () => {
       assert.deepEqual(generator.next().value, call(ApiDocuments.addEdit));
     });
 
-    it('should return the USERS_EDIT_SAVE action', () => {
+    it('should return the DOCUMENTS_EDIT_SAVE action', () => {
       assert.deepEqual(generator.next().value, put({
-        type: 'USERS_EDIT_SAVE',
+        type: 'DOCUMENTS_EDIT_SAVE',
         document: action.document,
       }));
     });
@@ -77,9 +81,9 @@ describe('Documents saga', () => {
       assert.deepEqual(generator.next().value, call(ApiDocuments.delete));
     });
 
-    it('should return the USERS_DELETE_SAVE action', () => {
+    it('should return the DOCUMENTS_DELETE_SAVE action', () => {
       assert.deepEqual(generator.next().value, put({
-        type: 'USERS_DELETE_SAVE',
+        type: 'DOCUMENTS_DELETE_SAVE',
         document_id: action.document_id,
       }));
     });

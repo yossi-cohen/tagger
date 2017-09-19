@@ -14,11 +14,12 @@
     "url": "https://github.com/yossi-cohen/tagger"
   },
   "scripts": {
-    "start": "webpack-dev-server --inline --hot --history-api-fallback --host localhost --port 9090",
+    "start": "cross-env NODE_ENV=dev webpack-dev-server --inline --hot --history-api-fallback --host localhost --port 9090",
     "build-dev": "webpack --config webpack.dev.config.js",
     "build-prod": "webpack -p --config webpack.prod.config.js",
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill --require ignore-styles",
-    "test-watch": "npm test -- --watch"
+    "test-watch": "npm test -- --watch",
+    "api": "json-server --watch src/api/db.json --port 3004"
   },
   "babel": {
     "presets": [
@@ -51,10 +52,12 @@
     "babel-preset-stage-3": "^6.17.0",
     "babel-runtime": "^6.20.0",
     "clean-webpack-plugin": "^0.1.15",
+    "cross-env": "^5.0.5",
     "css-loader": "^0.26.1",
     "enzyme": "^2.7.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "ignore-styles": "^5.0.1",
+    "json-server": "^0.12.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.3.0",
     "react-addons-test-utils": "^15.4.2",

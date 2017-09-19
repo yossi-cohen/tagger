@@ -1,9 +1,5 @@
-const sampleText = 
-"When Sebastian Thrun started working on self-driving cars at Google in 2007, few people outside of the company took him seriously.\
-\
-“I can tell you very senior CEOs of major American car companies would shake my hand and turn away because I wasn’t worth talking to,” said Thrun, now the co-founder and CEO of online higher education startup Udacity, in an interview with Recode earlier this week.\
-\
-A little less than a decade later, dozens of self-driving startups have cropped up while automakers around the world clamor, wallet in hand, to secure their place in the fast-moving world of fully automated transportation.";
+import config from '../config/config';
+const url = config[process.env.NODE_ENV].api + '/tokens';
 
 // API Documents static class
 export default class ApiDocuments {
@@ -17,7 +13,7 @@ export default class ApiDocuments {
           documents.push({
             id: x,
             documentName: 'Document-' + x,
-            documentText: sampleText,
+            documentText: '',
           });
         }
         resolve(documents);
@@ -42,6 +38,20 @@ export default class ApiDocuments {
         // do something here
         resolve();
       }, 500);
+    });
+  }
+
+  // lilo: get document tokens
+  static getTokens(documentId) {
+    return new Promise(reject, resolve => {
+      fetch(url, {})
+      .then(response => {
+          return response.json()
+      })
+      .then(json => {
+        resolve(json.tokens);
+      })
+      .catch(err => reject(err))
     });
   }
 }

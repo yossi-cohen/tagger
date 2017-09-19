@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import assert from "assert";
-import DocumentListElement from "../../src_documents/components/common/DocumentListElement";
+import DocumentListElement from "../../src/components/common/DocumentListElement";
 
 // unit tests for the DocumentListElement component
 describe('DocumentListElement component', () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import assert from "assert";
-import { DocumentEdit } from "../../src_documents/components/DocumentEdit";
+import { DocumentEdit } from "../../src/components/DocumentEdit";
 
 // unit tests for the DocumentEdit component
 describe('DocumentEdit component', () => {

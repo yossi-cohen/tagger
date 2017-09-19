@@ -37,7 +37,7 @@ export class DocumentEdit extends React.Component {
     const {dispatch} = this.props;
     return new Promise((resolve, reject) => {
       dispatch({
-        type: 'USERS_ADD_EDIT',
+        type: 'DOCUMENTS_ADD_EDIT',
         document: {
           id: values.id || 0,
           documentName: values.documentName,

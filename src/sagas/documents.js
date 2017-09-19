@@ -8,7 +8,7 @@ export function* documentsFetchList(action) {
 
   // save the documents in state
   yield put({
-    type: 'USERS_LIST_SAVE',
+    type: 'DOCUMENTS_LIST_SAVE',
     documents: documents,
   });
 }
@@ -21,7 +21,7 @@ export function* documentsAddEdit(action) {
 
   // update the state by adding/editing the document
   yield put({
-    type: action.document.id ? 'USERS_EDIT_SAVE' : 'USERS_ADD_SAVE',
+    type: action.document.id ? 'DOCUMENTS_EDIT_SAVE' : 'DOCUMENTS_ADD_SAVE',
     document: action.document,
   });
 
@@ -36,7 +36,23 @@ export function* documentsDelete(action) {
 
   // update the state by removing the document
   yield put({
-    type: 'USERS_DELETE_SAVE',
+    type: 'DOCUMENTS_DELETE_SAVE',
     document_id: action.document_id,
   });
 }
+
+// get document tokens
+export function* documentsGetTokens(action) {
+  // call the api to get the document tokens
+  yield call(ApiDocuments.getTokens, action.document_id);
+
+  // update the state by adding the document tokens
+  yield put({
+    type: 'DOCUMENTS_GET_TOKENS',
+    tokens: action.tokens,
+  });
+
+  // success
+  action.callbackSuccess();
+}
+

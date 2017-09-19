@@ -9,7 +9,7 @@ export class App extends React.Component {
   // pre-render logic
   componentWillMount() {
     // the first time we load the app, we need that documents list
-    this.props.dispatch({type: 'USERS_FETCH_LIST'});
+    this.props.dispatch({type: 'DOCUMENTS_FETCH_LIST'});
   }
 
   // render

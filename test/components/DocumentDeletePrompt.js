@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import assert from "assert";
-import DocumentDeletePrompt from "../../src_documents/components/common/DocumentDeletePrompt";
+import DocumentDeletePrompt from "../../src/components/common/DocumentDeletePrompt";
 
 // unit tests for the DocumentDeletePrompt component
 describe('DocumentDeletePrompt component', () => {
