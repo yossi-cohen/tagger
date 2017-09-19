@@ -52,6 +52,7 @@ def get_document(document_id):
       pass
     return "{} DELETED".format(document_id)
 
+
   if request.method == 'PUT':
     doc_name = request.args.get('name')
     doc = Document.get(id = document_id)
