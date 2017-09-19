@@ -14,18 +14,26 @@ DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
 app = Flask(__name__)
 
 
-@app.route('/documents', methods = ['GET'])
-def list_documents():
-  hits = Document.search().scan()
+def hits_to_docs(hits, include_body=None):
   result = []
   for hit in hits:
     dict = hit.to_dict()
-    result.append({
+    body = {
       'id': hit.meta.id,
-      'name': dict.get('name', ""),
+      'name': dict.get('name', ''),
       'created': dict.get('created', get_current_datetime()).strftime(DATETIME_FORMAT),
-      'modified': dict.get('modified', get_current_datetime()).strftime(DATETIME_FORMAT),
-    })
+      'modified': dict.get('modified', get_current_datetime()).strftime(DATETIME_FORMAT)
+    }
+    if include_body:
+      body['body'] = dict.get('body', '')
+    result.append(body)
+  return result
+
+
+@app.route('/documents', methods = ['GET'])
+def list_documents():
+  hits = Document.search().scan()
+  result = hits_to_docs(hits)
   return jsonify(result)
 
 
@@ -40,6 +48,22 @@ def get_document_internal(document_id):
     'modified': dict.get('modified', get_current_datetime()).strftime(DATETIME_FORMAT),
     'body': dict.get('body', ""),
   }
+
+
+@app.route('/documents/search', methods = ['GET'])
+def search_document():
+  query = request.args.get('query')
+  is_search_text = request.args.get('searchText')
+  page = request.args.get('page')
+  page_size = request.args.get('pageSize')
+
+  fields = ["name"]
+  if is_search_text and is_search_text.lower() == "True".lower():
+    fields.append("body")
+
+  hits = Document.search().query("query_string", fields = fields, query = query).execute()
+  result = hits_to_docs(hits, include_body = True)
+  return jsonify(result)
 
 
 @app.route('/documents/<document_id>', methods = ['GET', 'DELETE', 'PUT'])
