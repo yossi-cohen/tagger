@@ -52,6 +52,7 @@ def get_document(document_id):
     doc_name = request.args.get('name')
     doc = Document.get(id = document_id)
     doc['name'] = doc_name
+    doc['modified'] = get_current_datetime()
     doc.save()
 
   return jsonify(get_document_internal(document_id))
