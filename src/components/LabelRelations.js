@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import { PageHeader } from "react-bootstrap";
 
-// Document add/edit page component
+// Label Relations component
 export class LabelRelations extends React.Component {
   // constructor
   constructor(props) {
@@ -12,10 +12,12 @@ export class LabelRelations extends React.Component {
 
   // render
   render() {
-    const {document, handleSubmit, error, invalid, submitting} = this.props;
+    const { document, handleSubmit, error, invalid, submitting } = this.props;
     return (
       <div className="page-label-relations">
-        <PageHeader>{'Relations: Document ' + (document.id ? document.id : '(doc-id undefined)')}</PageHeader>
+        <PageHeader><small>
+          {'Relations: Document ' + (document.id ? document.id : '(doc-id undefined)')}
+        </small></PageHeader>
       </div>
     );
   }
@@ -26,7 +28,7 @@ function mapStateToProps(state, own_props) {
   const document = state.documents.find(x => Number(x.id) === Number(own_props.params.id)) || {};
   return {
     document: document,
-    initialValues: document,
   };
 }
+
 export default connect(mapStateToProps)(LabelRelations);

@@ -4,8 +4,7 @@ import ApiDocuments from "../../src/api/documents";
 import { 
   documentsFetchList, 
   documentsAddEdit, 
-  documentsDelete, 
-  documentsGetTokens } from "../../src/sagas/documents";
+  documentsDelete } from "../../src/sagas/documents";
 
 // unit tests for the documents saga
 describe('Documents saga', () => {

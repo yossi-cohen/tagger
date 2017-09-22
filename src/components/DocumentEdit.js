@@ -18,15 +18,17 @@ export class DocumentEdit extends React.Component {
 
   // render
   render() {
-    const {document, handleSubmit, error, invalid, submitting} = this.props;
+    const { document, handleSubmit, error, invalid, submitting } = this.props;
     return (
       <div className="page-document-edit">
-        <PageHeader>{'Document ' + (document.id ? 'edit' : 'add')}</PageHeader>
+        <PageHeader><small>
+          {'Document ' + (document.id ? 'edit' : 'add')}
+        </small></PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
-          <Field component={FormField} name="documentName" label="Document Name" doValidate={true}/>
-          <Field component={FormField} name="documentText" label="Document Text" doValidate={false}/>
+          <Field component={FormField} name="documentName" label="Document Name" doValidate={true} />
+          <Field component={FormField} name="documentText" label="Document Text" doValidate={false} />
           <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..."
-            buttonSave="Save Document"/>
+            buttonSave="Save Document" />
         </Form>
       </div>
     );
@@ -34,7 +36,7 @@ export class DocumentEdit extends React.Component {
 
   // submit the form
   formSubmit(values) {
-    const {dispatch} = this.props;
+    const { dispatch } = this.props;
     return new Promise((resolve, reject) => {
       dispatch({
         type: 'DOCUMENTS_ADD_EDIT',
@@ -44,7 +46,7 @@ export class DocumentEdit extends React.Component {
           documentText: values.documentText,
         },
         callbackError: (error) => {
-          reject(new SubmissionError({_error: error}));
+          reject(new SubmissionError({ _error: error }));
         },
         callbackSuccess: () => {
           dispatch(push('/'));

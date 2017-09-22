@@ -1,32 +1,72 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
-import { PageHeader, Panel } from "react-bootstrap";
+import { PageHeader, Panel, DropdownButton, MenuItem } from "react-bootstrap";
+import LabelSelector from './LabelSelector';
+import config from '../config/config';
 
-// import { documentsGetTokens } from "../../src/sagas/documents";
-
-// Document add/edit page component
+// Label Entities component
 export class LabelEntities extends React.Component {
   // constructor
   constructor(props) {
     super(props);
   }
 
+  // pre-render logic
+  componentWillMount() {
+    // the first time we load the document, we need that tokens list
+    if (!this.props.document.tokens)
+      this.props.dispatch({ type: 'DOCUMENT_GET_TOKENS', document: this.props.document });
+  }
+
   // render
   render() {
-    const {document, handleSubmit, error, invalid, submitting} = this.props;
+    const { document, handleSubmit, error, invalid, submitting } = this.props;
+    const tokens = document.tokens ? document.tokens : [];
+    const labels=config.labels;
+
     return (
       <div className="page-label-entities">
-        <PageHeader>{'Entities: Document ' + (document.id ? document.id : '(doc-id undefined)')}</PageHeader>
+        <PageHeader>
+          <small>
+            {'Entities: ' + (document.documentName ? document.documentName : '(undefined)')}
+          </small>
+          <div>
+          <LabelSelector ref="labelSelector" labels={labels} selected='person' />
+          </div>
+        </PageHeader>
+
         <Panel>
           <div className="entities">
-          {/* {this.props.document.documentText} */}
-          When <mark data-entity="person">Sebastian Thrun</mark> started working on self-driving cars at <mark data-entity="org">Google</mark> in <mark data-entity="date">2007</mark>, few people outside of the company took him seriously.<br/><br/>“I can tell you very senior CEOs of major American car companies would shake my hand and turn away because I wasn’t worth talking to,” said <mark data-entity="person">Thrun</mark>, now the co-founder and CEO of online higher education startup <mark data-entity="org">Udacity</mark>, in an interview with <mark data-entity="person">Recode</mark> <mark data-entity="date">earlier this week</mark>.<br/><br/>A little less than a decade later, dozens of self-driving startups have cropped up while automakers around the world clamor, wallet in hand, to secure their place in the fast-moving world of fully automated transportation.
+            {
+              tokens.map((token, index) => {
+                return (<mark data-entity={token.label && token.label != 'NA' ? token.label : undefined} key={index} onClick={(e) => this.handleTokenClick(e, index)}>{token.token} </mark>);
+              })
+            }
           </div>
         </Panel>
 
       </div>
     );
+  }
+
+  handleTokenClick(e, index) {
+    if (e.ctrlKey) {
+
+      let label = this.refs.labelSelector.getLabel();
+      let token = this.props.document.tokens[index];
+
+      // clear label?
+      if (token.label == label)
+        label = 'NA'; // remove last label
+        // else - modify to new label
+
+      this.props.dispatch({
+        type: 'DOCUMENT_SET_TOKEN_LABEL',
+        token: token,
+        label: label
+      });
+    }
   }
 }
 
@@ -35,7 +75,7 @@ function mapStateToProps(state, own_props) {
   const document = state.documents.find(x => Number(x.id) === Number(own_props.params.id)) || {};
   return {
     document: document,
-    initialValues: document,
   };
 }
+
 export default connect(mapStateToProps)(LabelEntities);
