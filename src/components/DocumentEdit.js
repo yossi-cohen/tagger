@@ -26,9 +26,8 @@ export class DocumentEdit extends React.Component {
         </small></PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
           <Field component={FormField} name="documentName" label="Document Name" doValidate={true} />
-          <Field component={FormField} name="documentText" label="Document Text" doValidate={false} />
-          <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..."
-            buttonSave="Save Document" />
+          <Field component={FormField} name="documentText" label="Document Text" doValidate={false} componentClass="textarea" placeholder="paste text here..." />
+          <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..." buttonSave="Save Document" />
         </Form>
       </div>
     );

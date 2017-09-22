@@ -15,9 +15,13 @@ export class LabelRelations extends React.Component {
     const { document, handleSubmit, error, invalid, submitting } = this.props;
     return (
       <div className="page-label-relations">
-        <PageHeader><small>
-          {'Relations: Document ' + (document.id ? document.id : '(doc-id undefined)')}
-        </small></PageHeader>
+        <PageHeader>
+        <small>
+            {'Relations: ' + (document.documentName ? document.documentName : '(undefined)')}
+            <br/>
+            NOT YET IMPLEMENTED
+          </small>
+        </PageHeader>
       </div>
     );
   }
