@@ -17,7 +17,7 @@ export default class LabelSelector extends React.Component {
   // render
   render() {
     return (
-      <DropdownButton id="labels" title={this.state.label}> {
+      <DropdownButton bsStyle="primary" id="labels" title={this.state.label}> {
         this.state.labels.map((label) => {
           return (<MenuItem
             key={label}

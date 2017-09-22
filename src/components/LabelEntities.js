@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
-import { PageHeader, Panel, DropdownButton, MenuItem } from "react-bootstrap";
+import { PageHeader, Panel, DropdownButton, MenuItem, Button } from "react-bootstrap";
 import LabelSelector from './LabelSelector';
 import config from '../config/config';
 
@@ -23,7 +23,7 @@ export class LabelEntities extends React.Component {
   render() {
     const { document, handleSubmit, error, invalid, submitting } = this.props;
     const tokens = document.tokens ? document.tokens : [];
-    const labels=config.labels;
+    const labels = config.labels;
 
     return (
       <div className="page-label-entities">
@@ -32,7 +32,9 @@ export class LabelEntities extends React.Component {
             {'Entities: ' + (document.documentName ? document.documentName : '(undefined)')}
           </small>
           <div>
-          <LabelSelector ref="labelSelector" labels={labels} selected='person' />
+            <LabelSelector ref="labelSelector" labels={labels} selected='person' />
+            &nbsp;
+            <Button disabled>Download Labels</Button>
           </div>
         </PageHeader>
 
@@ -40,7 +42,12 @@ export class LabelEntities extends React.Component {
           <div className="entities">
             {
               tokens.map((token, index) => {
-                return (<mark data-entity={token.label && token.label != 'NA' ? token.label : undefined} key={index} onClick={(e) => this.handleTokenClick(e, index)}>{token.token} </mark>);
+                return (
+                  <mark
+                    key={index}
+                    data-entity={token.label && token.label != 'NA' ? token.label : undefined}>
+                    <span onClick={(e) => this.handleTokenClick(e, index)}>{token.token} </span>
+                  </mark>);
               })
             }
           </div>
@@ -59,7 +66,7 @@ export class LabelEntities extends React.Component {
       // clear label?
       if (token.label == label)
         label = 'NA'; // remove last label
-        // else - modify to new label
+      // else - modify to new label
 
       this.props.dispatch({
         type: 'DOCUMENT_SET_TOKEN_LABEL',
