@@ -56,18 +56,21 @@ export default class DocumentTags extends React.Component {
     return this.state.tags.map(tag => tag.text);
   }
 
+  clearTags() {
+    this.setState({ tags: [] });
+  }
+
   // render
   render() {
     const { tags, suggestions } = this.state;
+    const placeholder = this.props.placeholder || 'Add tag';
     return (
-      <div>
-        <ReactTags tags={tags}
-          suggestions={suggestions}
-          placeholder='Add new tag'
-          handleDelete={this.handleDelete}
-          handleAddition={this.handleAddition}
-          handleDrag={this.handleDrag} />
-      </div>
+      <ReactTags tags={tags}
+        suggestions={suggestions}
+        placeholder={placeholder}
+        handleDelete={this.handleDelete}
+        handleAddition={this.handleAddition}
+        handleDrag={this.handleDrag} />
     )
   }
 }

@@ -4,7 +4,7 @@ import { push } from "react-router-redux";
 import { Field, SubmissionError, reduxForm } from "redux-form";
 import FormField from "./common/FormField";
 import FormSubmit from "./common/FormSubmit";
-import DocumentTags from './DocumentTags';
+import DocumentTags from './common/DocumentTags';
 import {
   PageHeader,
   Form,

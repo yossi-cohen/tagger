@@ -12,7 +12,7 @@ export class LabelRelations extends React.Component {
 
   // render
   render() {
-    const { document, handleSubmit, error, invalid, submitting } = this.props;
+    const { document } = this.props;
     return (
       <div className="page-label-relations">
         <PageHeader>

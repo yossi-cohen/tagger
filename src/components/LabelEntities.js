@@ -30,7 +30,7 @@ export class LabelEntities extends React.Component {
 
   // render
   render() {
-    const { document, handleSubmit, error, invalid, submitting } = this.props;
+    const { document } = this.props;
     const tokens = document.tokens ? document.tokens : [];
     const labels = config.labels;
 

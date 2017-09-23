@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
-import { Table, Pagination } from "react-bootstrap";
 import DocumentListElement from "./DocumentListElement";
 import DocumentDeletePrompt from "./DocumentDeletePrompt";
+import { Table, Pagination } from "react-bootstrap";
 
 // Document list component
 export class DocumentList extends React.Component {
@@ -27,7 +27,7 @@ export class DocumentList extends React.Component {
   // render
   render() {
     // pagination
-    const {documents, page} = this.props;
+    const { documents, page } = this.props;
     const per_page = 10;
     const pages = Math.ceil(documents.length / per_page);
     const start_offset = (page - 1) * per_page;
@@ -38,32 +38,32 @@ export class DocumentList extends React.Component {
       <div>
         <Table bordered hover responsive striped>
           <thead>
-          <tr>
-            <th>ID</th>
-            <th>Document Name</th>
-            <th>Entities</th>
-            <th>Relations</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
+            <tr>
+              <th>ID</th>
+              <th>Document Name</th>
+              <th>Entities</th>
+              <th>Relations</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
           </thead>
           <tbody>
-          {documents.map((document, index) => {
-            if (index >= start_offset && start_count < per_page) {
-              start_count++;
-              return (
-                <DocumentListElement key={index} document={document} showDelete={this.showDelete}/>
-              );
-            }
-          })}
+            {documents.map((document, index) => {
+              if (index >= start_offset && start_count < per_page) {
+                start_count++;
+                return (
+                  <DocumentListElement key={index} document={document} showDelete={this.showDelete} />
+                );
+              }
+            })}
           </tbody>
         </Table>
 
         <Pagination className="documents-pagination pull-right" bsSize="medium" maxButtons={10} first last next
-          prev boundaryLinks items={pages} activePage={page} onSelect={this.changePage}/>
+          prev boundaryLinks items={pages} activePage={page} onSelect={this.changePage} />
 
         <DocumentDeletePrompt show={this.state.delete_show} document={this.state.delete_document}
-          hideDelete={this.hideDelete} documentDelete={this.documentDelete}/>
+          hideDelete={this.hideDelete} documentDelete={this.documentDelete} />
       </div>
     );
   }
