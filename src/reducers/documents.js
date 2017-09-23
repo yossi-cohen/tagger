@@ -26,7 +26,6 @@ export default function documents(state = {}, action) {
         Number(document.id) === Number(action.document.id) ? doc : document
       );
 
-    //lilo:TODO
     case 'DOCUMENT_SET_TOKEN_LABEL_SAVE':
       return state.map(document => {
         if (Number(document.id) !== Number(action.token.documentId))

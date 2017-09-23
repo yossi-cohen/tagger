@@ -1,7 +1,6 @@
-- gather entity tokens
-- add document (text multi-line)
-- rename/delete document
-- search documents
 - tag(s) document + filter documents by tags
+- gather entity tokens
+- add/rename/delete document (call backend)
+- search documents
 - export labels (single/multiple documents, file-download)
 

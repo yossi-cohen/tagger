@@ -30,7 +30,7 @@ export function* documentsFetchList(action) {
 export function* documentsAddEdit(action) {
   try {
     // call the api to add/edit the document
-    yield call(ApiDocuments.addEdit);
+    yield call(ApiDocuments.addEdit, action.document);
     //return action.callbackError("Some error");   // show an error when the API fails
 
     // update the state by adding/editing the document
@@ -57,7 +57,7 @@ export function* documentsAddEdit(action) {
 export function* documentsDelete(action) {
   // call the api to delete the document
   try {
-    yield call(ApiDocuments.delete);
+    yield call(ApiDocuments.delete, action.document_id);
 
     // update the state by removing the document
     yield put({

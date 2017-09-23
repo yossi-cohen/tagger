@@ -53,10 +53,6 @@ export class LabelEntities extends React.Component {
             <Button disabled>Download Labels</Button>
           </div>
         </PageHeader>
-        <div style={{ fontSize: '13px' }}>
-          <span>ctrl-click on a tokens to set label.</span><br />
-          <span>ctrl-click with same label again to delete label.</span>
-        </div>
         <OverlayTrigger overlay={tooltip} placement='top'>
           <Panel>
             <div className="entities">

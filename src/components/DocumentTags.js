@@ -3,21 +3,21 @@ import ReactDOM from 'react-dom';
 import { connect } from "react-redux";
 import { WithContext as ReactTags } from 'react-tag-input';
 
-const Countries = [
-  'Thailand',
-  'India',
-  'Israel',
-];
-
 // Document add/edit page component
-export class DocumentTags extends React.Component {
+export default class DocumentTags extends React.Component {
   // constructor
   constructor(props) {
     super(props);
-    
+
+    // map from string array to object array
+    let id = 0;
+    const tags = props.tags ? props.tags.map(tag => {
+      return { id: ++id, text: tag }
+    }) : [];
+
     this.state = {
-      tags: [{ id: 1, text: "Thailand" }, { id: 2, text: "India" }],
-      suggestions: Countries
+      tags: tags,
+      suggestions: props.suggestions || []
     };
 
     this.handleDelete = this.handleDelete.bind(this);
@@ -51,6 +51,11 @@ export class DocumentTags extends React.Component {
     this.setState({ tags: tags });
   }
 
+  tags() {
+    // map from object array to string array
+    return this.state.tags.map(tag => tag.text);
+  }
+
   // render
   render() {
     const { tags, suggestions } = this.state;
@@ -58,6 +63,7 @@ export class DocumentTags extends React.Component {
       <div>
         <ReactTags tags={tags}
           suggestions={suggestions}
+          placeholder='Add new tag'
           handleDelete={this.handleDelete}
           handleAddition={this.handleAddition}
           handleDrag={this.handleDrag} />
@@ -65,16 +71,3 @@ export class DocumentTags extends React.Component {
     )
   }
 }
-
-//lilo
-// // export the connected class
-// function mapStateToProps(state) {
-//   const document = state.documents.find(x => Number(x.id) === Number(this.props.document.id)) || {};
-//   return {
-//     document: document,
-//     initialValues: document,
-//   };
-// }
-
-// export default connect(mapStateToProps)(DocumentTags);
-export default connect()(DocumentTags);

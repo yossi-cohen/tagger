@@ -5,20 +5,25 @@ import { Field, SubmissionError, reduxForm } from "redux-form";
 import FormField from "./common/FormField";
 import FormSubmit from "./common/FormSubmit";
 import DocumentTags from './DocumentTags';
-import { 
-  PageHeader, 
-  Form, 
-  FormGroup, 
-  FormControl, 
-  HelpBlock, 
-  Row, 
-  Col } from "react-bootstrap";
+import {
+  PageHeader,
+  Form,
+  FormGroup,
+  FormControl,
+  HelpBlock,
+  Row,
+  Col
+} from "react-bootstrap";
 
 // Document add/edit page component
 export class DocumentEdit extends React.Component {
   // constructor
   constructor(props) {
     super(props);
+
+    this.state = {
+      tagsSuggestions: [] //lilo:TODO - read from backend
+    };
 
     // bind <this> to the event method
     this.formSubmit = this.formSubmit.bind(this);
@@ -35,7 +40,7 @@ export class DocumentEdit extends React.Component {
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
           {/* name */}
           <Field component={FormField} name="documentName" label="Document Name" doValidate={true} />
-          
+
           {/* text */}
           <Field component={FormField} name="documentText" label="Document Text" doValidate={false} componentClass="textarea" placeholder="paste text here..." />
 
@@ -43,7 +48,12 @@ export class DocumentEdit extends React.Component {
           <FormGroup>
             <Row>
               <Col sm={3}>{'Document Tags'}</Col>
-              <Col sm={9}><DocumentTags document={document} /></Col>
+              <Col sm={9}>
+                <DocumentTags 
+                  ref="documentTags"
+                  tags={document.tags} 
+                  suggestions={this.state.tagsSuggestions} />
+              </Col>
             </Row>
           </FormGroup>
 
@@ -64,6 +74,7 @@ export class DocumentEdit extends React.Component {
           id: values.id || 0,
           documentName: values.documentName,
           documentText: values.documentText,
+          tags: this.refs.documentTags.tags(),
         },
         callbackError: (error) => {
           reject(new SubmissionError({ _error: error }));

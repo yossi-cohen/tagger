@@ -17,25 +17,37 @@ export default class ApiDocuments {
   // -----------------------------------------------------
   // add/edit a document
   // -----------------------------------------------------
-  static addEdit() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // do something here
-        resolve();
-      }, 1000);
-    });
+  static addEdit(document) {
+    if (document.id) {
+      return fetch(url + '/documents/' + document.id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(document)
+      })
+        .then(response => { return response.json() });
+    }
+
+    // add a new document
+    return fetch(url + '/documents/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(document)
+    })
+      .then(response => { return response.json() });
   }
 
   // -----------------------------------------------------
   // delete a document
   // -----------------------------------------------------
-  static delete() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // do something here
-        resolve();
-      }, 500);
-    });
+  static delete(documentId) {
+    return fetch(url + '/documents/' + documentId, {
+      method: 'DELETE'
+    })
+      .then(response => { return response.json() });
   }
 
   // -----------------------------------------------------

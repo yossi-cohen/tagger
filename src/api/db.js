@@ -9,10 +9,13 @@ module.exports = () => {
     const tokens = text.split(' ');
 
     // create documents
+    const created = Date.now();
     for (let i = 1; i <= 30; i++) {
         data.documents.push({
             id: i,
             documentName: `Document-${i}`,
+            created: created,
+            tags: [],
         });
 
         for (let j = 0; j < tokens.length; j++) {
