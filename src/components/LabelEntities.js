@@ -1,9 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
-import { PageHeader, Panel, DropdownButton, MenuItem, Button } from "react-bootstrap";
 import LabelSelector from './LabelSelector';
 import config from '../config/config';
+import {
+  PageHeader,
+  Panel,
+  DropdownButton,
+  MenuItem,
+  Button,
+  OverlayTrigger,
+  Tooltip
+} from "react-bootstrap";
 
 // Label Entities component
 export class LabelEntities extends React.Component {
@@ -25,6 +33,14 @@ export class LabelEntities extends React.Component {
     const tokens = document.tokens ? document.tokens : [];
     const labels = config.labels;
 
+    const tooltip = (
+      <Tooltip id="tooltip">
+        ctrl-click on a tokens to <strong>set</strong> label.
+        <br />
+        ctrl-click again to <strong>delete</strong> label.
+      </Tooltip>
+    );
+
     return (
       <div className="page-label-entities">
         <PageHeader>
@@ -37,21 +53,26 @@ export class LabelEntities extends React.Component {
             <Button disabled>Download Labels</Button>
           </div>
         </PageHeader>
-
-        <Panel>
-          <div className="entities">
-            {
-              tokens.map((token, index) => {
-                return (
-                  <mark
-                    key={index}
-                    data-entity={token.label && token.label != 'NA' ? token.label : undefined}>
-                    <span onClick={(e) => this.handleTokenClick(e, index)}>{token.token} </span>
-                  </mark>);
-              })
-            }
-          </div>
-        </Panel>
+        <div style={{ fontSize: '13px' }}>
+          <span>ctrl-click on a tokens to set label.</span><br />
+          <span>ctrl-click with same label again to delete label.</span>
+        </div>
+        <OverlayTrigger overlay={tooltip} placement='top'>
+          <Panel>
+            <div className="entities">
+              {
+                tokens.map((token, index) => {
+                  return (
+                    <mark
+                      key={index}
+                      data-entity={token.label && token.label != 'NA' ? token.label : undefined}>
+                      <span onClick={(e) => this.handleTokenClick(e, index)}>{token.token} </span>
+                    </mark>);
+                })
+              }
+            </div>
+          </Panel>
+        </OverlayTrigger>
 
       </div>
     );
@@ -64,7 +85,7 @@ export class LabelEntities extends React.Component {
       let token = this.props.document.tokens[index];
 
       // clear label?
-      if (token.label == label)
+      if (token.label === label)
         label = 'NA'; // remove last label
       // else - modify to new label
 

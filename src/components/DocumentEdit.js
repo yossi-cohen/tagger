@@ -2,9 +2,17 @@ import React from "react";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import { Field, SubmissionError, reduxForm } from "redux-form";
-import { PageHeader, Form } from "react-bootstrap";
 import FormField from "./common/FormField";
 import FormSubmit from "./common/FormSubmit";
+import DocumentTags from './DocumentTags';
+import { 
+  PageHeader, 
+  Form, 
+  FormGroup, 
+  FormControl, 
+  HelpBlock, 
+  Row, 
+  Col } from "react-bootstrap";
 
 // Document add/edit page component
 export class DocumentEdit extends React.Component {
@@ -25,8 +33,21 @@ export class DocumentEdit extends React.Component {
           {'Document ' + (document.id ? 'edit' : 'add')}
         </small></PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
+          {/* name */}
           <Field component={FormField} name="documentName" label="Document Name" doValidate={true} />
+          
+          {/* text */}
           <Field component={FormField} name="documentText" label="Document Text" doValidate={false} componentClass="textarea" placeholder="paste text here..." />
+
+          {/* tags */}
+          <FormGroup>
+            <Row>
+              <Col sm={3}>{'Document Tags'}</Col>
+              <Col sm={9}><DocumentTags document={document} /></Col>
+            </Row>
+          </FormGroup>
+
+          {/* submit */}
           <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..." buttonSave="Save Document" />
         </Form>
       </div>
