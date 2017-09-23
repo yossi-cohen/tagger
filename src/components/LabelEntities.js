@@ -10,7 +10,8 @@ import {
   MenuItem,
   Button,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
+  ProgressBar
 } from "react-bootstrap";
 
 // Label Entities component
@@ -32,6 +33,13 @@ export class LabelEntities extends React.Component {
     const { document, handleSubmit, error, invalid, submitting } = this.props;
     const tokens = document.tokens ? document.tokens : [];
     const labels = config.labels;
+
+    // show the loading state while we wait for the app to load
+    if (!tokens.length) {
+      return (
+        <ProgressBar active now={100} />
+      );
+    }
 
     const tooltip = (
       <Tooltip id="tooltip">
