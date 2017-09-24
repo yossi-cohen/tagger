@@ -1,27 +1,22 @@
 import config from '../config/config';
-const url = config[process.env.NODE_ENV].api + '/tokens';
+const url = config[process.env.NODE_ENV].api;
 
 // API Documents static class
 export default class ApiDocuments {
+
+  // -----------------------------------------------------
   // get a list of documents
+  // -----------------------------------------------------
   static getList() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // build some dummy documents list
-        let documents = [];
-        for (let x = 1; x <= 28; x++) {
-          documents.push({
-            id: x,
-            documentName: 'Document-' + x,
-            documentText: '',
-          });
-        }
-        resolve(documents);
-      }, 1000);
-    });
+    return fetch(url + '/documents', {})
+      .then(response => {
+        return response.json()
+      });
   }
 
+  // -----------------------------------------------------
   // add/edit a document
+  // -----------------------------------------------------
   static addEdit() {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -31,7 +26,9 @@ export default class ApiDocuments {
     });
   }
 
+  // -----------------------------------------------------
   // delete a document
+  // -----------------------------------------------------
   static delete() {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -41,17 +38,30 @@ export default class ApiDocuments {
     });
   }
 
-  // lilo: get document tokens
+  // -----------------------------------------------------
+  // get document tokens
+  // -----------------------------------------------------
   static getTokens(documentId) {
-    return new Promise(reject, resolve => {
-      fetch(url, {})
+    return fetch(url + '/documents/' + documentId + '/tokens', {})
       .then(response => {
-          return response.json()
-      })
-      .then(json => {
-        resolve(json.tokens);
-      })
-      .catch(err => reject(err))
-    });
+        return response.json();
+      });
+  }
+
+  // -----------------------------------------------------
+  // set token label
+  // -----------------------------------------------------
+  static setTokenLabel(token, label) {
+    let new_token = { ...token }
+    new_token.label = label;
+
+    return fetch(url + '/tokens/' + token.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(new_token)
+    })
+      .then(response => { return response.json() });
   }
 }

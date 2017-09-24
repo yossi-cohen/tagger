@@ -48,4 +48,5 @@ function mapStateToProps(state) {
     documents: state.documents || [],
   };
 }
+
 export default connect(mapStateToProps)(App);

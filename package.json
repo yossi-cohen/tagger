@@ -14,12 +14,13 @@
     "url": "https://github.com/yossi-cohen/tagger"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=dev webpack-dev-server --inline --hot --history-api-fallback --host localhost --port 9090",
+    "start": "webpack-dev-server --inline --hot --history-api-fallback --host localhost --port 9090",
     "build-dev": "webpack --config webpack.dev.config.js",
     "build-prod": "webpack -p --config webpack.prod.config.js",
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill --require ignore-styles",
     "test-watch": "npm test -- --watch",
-    "api": "json-server --watch src/api/db.json --port 3004"
+    "api": "json-server src/api/db.js --port 3004",
+    "api:old": "json-server --watch src/api/db.json --port 3004"
   },
   "babel": {
     "presets": [
@@ -31,6 +32,7 @@
   "author": "Catalin Luntraru",
   "license": "MIT",
   "dependencies": {
+    "prop-types": "^15.5.10",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",

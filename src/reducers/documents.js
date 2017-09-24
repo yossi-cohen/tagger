@@ -11,18 +11,39 @@ export default function documents(state = {}, action) {
 
     case 'DOCUMENTS_EDIT_SAVE':
       return state.map(document =>
-        Number(document.id) === Number(action.document.id) ? {...action.document} : document
+        Number(document.id) === Number(action.document.id) ? { ...action.document } : document
       );
-      break;
 
     case 'DOCUMENTS_DELETE_SAVE':
       return state.filter(document =>
         Number(document.id) !== Number(action.document_id)
       );
 
-    case 'DOCUMENTS_GET_TOKENS':
-      const tokens = action.tokens;
-      return [...state, tokens];
+    case 'DOCUMENT_TOKENS_SAVE':
+      const doc = { ...action.document };
+      doc.tokens = [...action.tokens];
+      return state.map(document =>
+        Number(document.id) === Number(action.document.id) ? doc : document
+      );
+
+    //lilo:TODO
+    case 'DOCUMENT_SET_TOKEN_LABEL_SAVE':
+      return state.map(document => {
+        if (Number(document.id) !== Number(action.token.documentId))
+          return document;
+
+        let doc = { ...document };
+
+        doc.tokens = doc.tokens.map(token => {
+          if (Number(token.id) !== Number(action.token.id))
+            return token;
+          let tok = { ...action.token };
+          tok.label = action.label;
+          return tok;
+        });
+
+        return doc;
+      });
 
     // initial state
     default:
