@@ -29,6 +29,9 @@ export default class DocumentTags extends React.Component {
     let tags = this.state.tags;
     tags.splice(i, 1);
     this.setState({ tags: tags });
+
+    if (this.props.handleDelete)
+      this.props.handleDelete(this.tags());
   }
 
   handleAddition(tag) {
@@ -38,6 +41,9 @@ export default class DocumentTags extends React.Component {
       text: tag
     });
     this.setState({ tags: tags });
+
+    if (this.props.handleAddition)
+      this.props.handleAddition(this.tags());
   }
 
   handleDrag(tag, currPos, newPos) {
@@ -49,6 +55,9 @@ export default class DocumentTags extends React.Component {
 
     // re-render 
     this.setState({ tags: tags });
+
+    if (this.props.handleDrag)
+      this.props.handleDrag(this.tags());
   }
 
   tags() {

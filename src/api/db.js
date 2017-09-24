@@ -1,6 +1,6 @@
 // db.js
 module.exports = () => {
-    const data = { documents: [], text: [], tokens: [] }
+    const data = { documents: [], text: [], tokens: [], tags: [] }
 
     const text = 'When Sebastian Thrun started working on self-driving cars at Google in 2007, few people outside of the company took him seriously.\
     “I can tell you very senior CEOs of major American car companies would shake my hand and turn away because I wasn’t worth talking to,” said Thrun, now the co-founder and CEO of online higher education startup Udacity, in an interview with Recode earlier this week.\
@@ -11,6 +11,7 @@ module.exports = () => {
     // create documents
     const created = Date.now();
     for (let i = 1; i <= 30; i++) {
+        // documents
         data.documents.push({
             id: i,
             documentName: `Document-${i}`,
@@ -18,9 +19,10 @@ module.exports = () => {
             tags: [],
         });
 
+        // tokens
         for (let j = 0; j < tokens.length; j++) {
             let token = {
-                id: j + 1,
+                id: 1000*i + j + 1,
                 documentId: i,
                 index: j,
                 token: tokens[j],
@@ -28,6 +30,19 @@ module.exports = () => {
             }
 
             data.tokens.push(token);
+        }
+
+        // tags
+        if (i > 5)
+            continue; //lilo
+        for (let j = 1; j <= 3; j++) {
+            let tag = {
+                id: 100*i + j,
+                documentId: i,
+                tag: 'tag' + j
+            }
+
+            data.tags.push(tag);
         }
     }
 

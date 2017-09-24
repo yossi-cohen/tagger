@@ -19,8 +19,7 @@
     "build-prod": "webpack -p --config webpack.prod.config.js",
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill --require ignore-styles",
     "test-watch": "npm test -- --watch",
-    "api": "json-server src/api/db.js --port 3004",
-    "api:old": "json-server --watch src/api/db.json --port 3004"
+    "api": "json-server --watch src/api/db.js --port 3004"
   },
   "babel": {
     "presets": [
