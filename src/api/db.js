@@ -31,19 +31,6 @@ module.exports = () => {
 
             data.tokens.push(token);
         }
-
-        // tags
-        if (i > 5)
-            continue; //lilo
-        for (let j = 1; j <= 3; j++) {
-            let tag = {
-                id: 100*i + j,
-                documentId: i,
-                tag: 'tag' + j
-            }
-
-            data.tags.push(tag);
-        }
     }
 
     return data
