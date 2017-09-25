@@ -1,7 +1,6 @@
 import uuid
 
 import elasticsearch
-from elasticsearch_dsl import Q
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -48,6 +47,20 @@ def get_document_internal(document_id, include_text = None):
   if include_text:
     doc['text'] = dict.get('text', '')
   return doc
+
+
+def get_pagination_params(page, pageSize):
+  if not page:
+    page = 0
+
+  if not pageSize:
+    pageSize = 100
+
+  page, pageSize = int(page), int(pageSize)
+
+  from_index = page * pageSize
+  to_index = ((page + 1) * pageSize)
+  return from_index, to_index
 
 
 @app.route('/documents', methods = ['POST'])
@@ -128,23 +141,22 @@ def delete_document(document_id):
 @app.route('/documents', methods = ['GET'])
 def get_documents():
   sortBy = request.args.get('sortBy')
-  order = request.args.get('order','desc')
-  page = request.args.get('page')
-  pageSize = request.args.get('pageSize')
+  order = request.args.get('order', 'desc')
+  from_index, to_index = get_pagination_params(request.args.get('page'),request.args.get('pageSize'))
   tags = request.args.getlist('tags')
 
   search = Document.search()
   for tag in tags:
-    search = search.filter('term', tags=tag)
+    search = search.filter('term', tags = tag)
 
   if sortBy:
     if sortBy == 'name':
-      sortBy = sortBy+".keyword"
+      sortBy = sortBy + ".keyword"
     search = search.sort(
       {sortBy: {"order": order}}
     )
 
-  hits = search.execute()
+  hits = search[from_index:to_index]
   result = hits_to_docs(hits)
   return jsonify(result)
 
@@ -153,8 +165,8 @@ def get_documents():
 def search_document():
   query = request.args.get('query', '')
   is_search_text = request.args.get('searchText', '')
-  page = request.args.get('page', 0)
-  page_size = request.args.get('pageSize', 100)
+  from_index, to_index = get_pagination_params(request.args.get('page'),request.args.get('pageSize'))
+
 
   fields = ["name"]
   if is_search_text and is_search_text.lower() == "True".lower():
@@ -163,7 +175,7 @@ def search_document():
   if len(request.args) == 0:
     hits = Document.search().query("match_all").execute()
   else:
-    hits = Document.search().query("query_string", fields = fields, query = query).execute()
+    hits = Document.search().query("query_string", fields = fields, query = query)[from_index:to_index]
   result = hits_to_docs(hits, include_text = True)
   return jsonify(result)
 
@@ -176,7 +188,7 @@ def get_document_text(document_id):
 
 @app.route('/documents/<string:document_id>/tokens', methods = ['GET'])
 def get_document_tokens(document_id):
-  tokens = Tokens.get(id=document_id)
+  tokens = Tokens.get(id = document_id)
   tokenList = list()
   tokenList.extend(tokens['entityTokens'])
   return jsonify(tokenList)
@@ -184,7 +196,7 @@ def get_document_tokens(document_id):
 
 @app.route('/documents/<string:document_id>/entities/labels', methods = ['GET'])
 def get_document_entity_labels(document_id):
-  labels = Labels.get(id=document_id)
+  labels = Labels.get(id = document_id)
   labelList = list()
   labelList.extend(labels['entityLabels'])
   return jsonify(labelList)
@@ -198,9 +210,9 @@ def get_token_entity_labels(document_id, token_index):
 
 @app.route('/documents/<string:document_id>/<int:token_index>/entities/labels', methods = ['PUT'])
 def set_token_entity_labels(document_id, token_index):
-  label = request.args.get('label','NA')
+  label = request.args.get('label', 'NA')
 
-  labels = Labels.get(id = document_id, ignore=404)
+  labels = Labels.get(id = document_id, ignore = 404)
   if not labels:
     labels = Labels(meta = {'id': document_id}, entityLabels = [])
   labels['entityLabels'][token_index] = label
@@ -210,8 +222,7 @@ def set_token_entity_labels(document_id, token_index):
 
 @app.route('/documents/<document_id>/<token_index>/entities/labels', methods = ['DELETE'])
 def delete_token_entity_labels(document_id, token_index):
-
-  labels = Labels.get(id = document_id, ignore=404)
+  labels = Labels.get(id = document_id, ignore = 404)
   if not labels:
     labels = Labels(meta = {'id': document_id}, entityLabels = [])
   labels['entityLabels'][token_index] = ""
