@@ -66,18 +66,7 @@ def insert_document():
   doc.save()
 
   tokens = tokenize(text)
-
-  tokensDoc = db.Tokens(meta = {'id': new_id})
-  tokensDoc.entityTokens = tokens
-  tokensDoc.save()
-
-  labels = list()
-  for token in tokens:
-    labels.append("")
-
-  labelsDoc = db.Labels(meta = {'id': new_id})
-  labelsDoc.entityLabels = labels
-  labelsDoc.save()
+  db.Token().save_tokens(tokens=tokens, documentId = new_id)
 
   return jsonify(db.Document.get(new_id).to_json())
 
@@ -87,11 +76,24 @@ def get_document(document_id):
   return jsonify(db.Document.get(document_id).to_json())
 
 
+
+
+
 @app.route('/documents/<string:document_id>', methods = ['PUT'])
-def rename_document(document_id):
+def update_document(document_id):
   doc_name = request.args.get('name')
   doc = db.Document.get(id = document_id)
-  doc['name'] = doc_name
+  if doc_name:
+    doc['name'] = doc_name
+  if request.is_json:
+    json = request.get_json()
+    text = json.get('text')
+    if text:
+      db.Token().delete_tokens(document_id)
+      doc['text'] = text
+      tokens = tokenize(text)
+      db.Token().save_tokens(tokens = tokens, documentId = document_id)
+
   doc['modified'] = db.get_current_datetime()
   doc.save()
 
@@ -101,7 +103,7 @@ def rename_document(document_id):
 @app.route('/documents/<string:document_id>', methods = ['DELETE'])
 def delete_document(document_id):
   try:
-    Document(meta = {'id': document_id}).delete()
+    db.Document(meta = {'id': document_id}).delete()
   except elasticsearch.exceptions.NotFoundError:
     pass
   return "{} DELETED".format(document_id)
@@ -156,46 +158,71 @@ def get_document_text(document_id):
 
 @app.route('/documents/<string:document_id>/tokens', methods = ['GET'])
 def get_document_tokens(document_id):
-  tokens = db.Tokens.get(id = document_id)
-  tokenList = list()
-  tokenList.extend(tokens['entityTokens'])
-  return jsonify(tokenList)
+  tokens = db.Token.search().filter('term', documentId=document_id).sort({
+    "index": {
+      "order": "asc"
+    }
+  }).execute()
+
+  return jsonify(list(map(lambda x: x.to_json(), tokens)))
 
 
 @app.route('/documents/<string:document_id>/entities/labels', methods = ['GET'])
 def get_document_entity_labels(document_id):
-  labels = db.Labels.get(id = document_id)
-  labelList = list()
-  labelList.extend(labels['entityLabels'])
-  return jsonify(labelList)
+  tokens = db.Token.search().filter('term', documentId=document_id).sort({
+    "index": {
+      "order": "asc"
+    }
+  }).execute()
+
+  return jsonify(list(map(lambda x: x['label'],tokens)))
+
+
+@app.route('/documents/<string:document_id>/tokens/<string:token_id>', methods = ['GET'])
+def get_token(document_id,token_id):
+  token = db.Token.get(id=token_id)
+  if token.documentId != document_id:
+    return abort(400, "token id doesnt match document id")
+
+  return jsonify(token.to_json())
 
 
 @app.route('/documents/<string:document_id>/<int:token_index>/entities/labels', methods = ['GET'])
 def get_token_entity_labels(document_id, token_index):
-  labels = db.Labels.get(id = document_id)
-  return labels.entityLabels[token_index]
+  tokens = db.Token.search().filter('term', documentId = document_id).filter('term', index=token_index).sort({
+    "index": {
+      "order": "asc"
+    }
+  }).execute()
+  return jsonify(list(map(lambda x: x['label'],tokens))[0])
 
 
 @app.route('/documents/<string:document_id>/<int:token_index>/entities/labels', methods = ['PUT'])
 def set_token_entity_labels(document_id, token_index):
-  label = request.args.get('label', 'NA')
+  tokens = db.Token.search().filter('term', documentId = document_id).filter('term', index=token_index).sort({
+    "index": {
+      "order": "asc"
+    }
+  }).execute()
 
-  labels = db.Labels.get(id = document_id, ignore = 404)
-  if not labels:
-    labels = db.Labels(meta = {'id': document_id}, entityLabels = [])
-  labels['entityLabels'][token_index] = label
-  labels.save()
-  return "OK"
+  token=tokens[0]
+  token.label = request.args.get('label',"NA")
+  token.save()
+  return jsonify(token.to_json())
 
 
 @app.route('/documents/<document_id>/<token_index>/entities/labels', methods = ['DELETE'])
 def delete_token_entity_labels(document_id, token_index):
-  labels = db.Labels.get(id = document_id, ignore = 404)
-  if not labels:
-    labels = db.Labels(meta = {'id': document_id}, entityLabels = [])
-  labels['entityLabels'][token_index] = ""
-  labels.save()
-  return "OK"
+  tokens = db.Token.search().filter('term', documentId = document_id).filter('term', index=token_index).sort({
+    "index": {
+      "order": "asc"
+    }
+  }).execute()
+
+  token=tokens[0]
+  token.label = "NA"
+  token.save()
+  return jsonify(token.to_json())
 
 
 @app.route('/documents/<document_id>/entities', methods = ['GET'])
@@ -210,6 +237,5 @@ def get_document_mentions(document_id):
 
 if __name__ == '__main__':
   db.Document.init()
-  db.Labels.init()
-  db.Tokens.init()
+  db.Token.init()
   app.run(port = 12000, debug = True)

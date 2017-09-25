@@ -2,10 +2,11 @@ from datetime import datetime
 
 from elasticsearch_dsl import Date, DocType, Integer, Keyword, Text
 from elasticsearch_dsl.connections import connections
+from elasticsearch import helpers
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
 
-connections.create_connection(hosts = ['localhost'])
+es = connections.create_connection(hosts = ['localhost'])
 
 
 def search_hits_to_jsons(hits, include_text = None):
@@ -63,10 +64,12 @@ class Document(DocType):
     index = 'documents'
 
 
-class Tokens(DocType):
+class Token(DocType):
   documentId = Keyword()
   tokenzier = Keyword()
-  entityTokens = Text()
+  index = Integer()
+  token = Keyword()
+  label = Keyword()
 
   class Meta:
     index = 'tokens'
@@ -75,13 +78,42 @@ class Tokens(DocType):
     self.tokenzier = 'spacy'
     return super().save(**kwargs)
 
+  def save_tokens(self, tokens, documentId):
+    index = 0
+    actions = []
+    for token in tokens:
+      actions.append(Token(documentId = documentId, index=index, token=token, label="NA").to_dict(include_meta = True))
+      index+=1
+    helpers.bulk(es, actions)
 
-class Labels(DocType):
-  documentId = Keyword()
-  entityLabels = Keyword()
+  def delete_tokens(self, documentId):
+    tokens = self.search().filter('term', documentId = documentId).sort({
+      "index": {
+        "order": "asc"
+      }
+    }).execute()
 
-  class Meta:
-    index = 'labels'
+    actions = []
+    for token in tokens:
+      action = token.to_dict(include_meta = True)
+      action['_op_type'] = 'delete'
+      actions.append(action)
+    helpers.bulk(es, actions)
+
+
+
+
+  def to_json(self):
+    dict = {
+      'id': self.meta.id,
+      'documentId': self.documentId,
+      'tokenizer': 'spacy',
+      'index': self.index,
+      'token': self.token,
+      'label': self.label
+    }
+    return dict
+
 
 
 class Mention(DocType):
