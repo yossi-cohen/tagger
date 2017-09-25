@@ -6,8 +6,8 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 
 from backend import FileUtils
-from backend.DatabaseModel import Document, Labels, Tokens
-from backend.FileUtils import allowed_file, get_current_datetime
+import backend.DatabaseModel as db
+from backend.FileUtils import *
 from backend.TokenizerWrapper import tokenize
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
@@ -15,38 +15,7 @@ DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
 app = Flask(__name__)
 
 
-def hits_to_docs(hits, include_text = None):
-  result = []
-  for hit in hits:
-    dict = hit.to_dict()
-    doc = {
-      'id': hit.meta.id,
-      'name': dict.get('name', ''),
-      'tags': dict.get('tags', []),
-      'created': dict.get('created', get_current_datetime()).strftime(DATETIME_FORMAT),
-      'modified': dict.get('modified', get_current_datetime()).strftime(DATETIME_FORMAT)
-    }
-    if include_text:
-      doc['text'] = dict.get('text', '')
-    result.append(doc)
-  return result
 
-
-def get_document_internal(document_id, include_text = None):
-  doc = Document.get(id = document_id)
-  dict = doc.to_dict()
-
-  doc = {
-    'id': doc.meta.id,
-    'name': dict.get('name', ""),
-    'tags': dict.get('tags', []),
-    'created': dict.get('created', get_current_datetime()).strftime(DATETIME_FORMAT),
-    'modified': dict.get('modified', get_current_datetime()).strftime(DATETIME_FORMAT),
-  }
-
-  if include_text:
-    doc['text'] = dict.get('text', '')
-  return doc
 
 
 def get_pagination_params(page, pageSize):
@@ -88,17 +57,17 @@ def insert_document():
     tags = json.get('tags', tags)
 
   new_id = uuid.uuid4()
-  doc = Document(meta = {'id': new_id},
+  doc = db.Document(meta = {'id': new_id},
                  name = filename,
                  text = text,
                  tags = tags,
-                 created = get_current_datetime(),
-                 modified = get_current_datetime())
+                 created = db.get_current_datetime(),
+                 modified = db.get_current_datetime())
   doc.save()
 
   tokens = tokenize(text)
 
-  tokensDoc = Tokens(meta = {'id': new_id})
+  tokensDoc = db.Tokens(meta = {'id': new_id})
   tokensDoc.entityTokens = tokens
   tokensDoc.save()
 
@@ -106,27 +75,27 @@ def insert_document():
   for token in tokens:
     labels.append("")
 
-  labelsDoc = Labels(meta = {'id': new_id})
+  labelsDoc = db.Labels(meta = {'id': new_id})
   labelsDoc.entityLabels = labels
   labelsDoc.save()
 
-  return jsonify(get_document_internal(new_id))
+  return jsonify(db.Document.get(new_id).to_json())
 
 
 @app.route('/documents/<string:document_id>', methods = ['GET'])
 def get_document(document_id):
-  return jsonify(get_document_internal(document_id))
+  return jsonify(db.Document.get(document_id).to_json())
 
 
 @app.route('/documents/<string:document_id>', methods = ['PUT'])
 def rename_document(document_id):
   doc_name = request.args.get('name')
-  doc = Document.get(id = document_id)
+  doc = db.Document.get(id = document_id)
   doc['name'] = doc_name
-  doc['modified'] = get_current_datetime()
+  doc['modified'] = db.get_current_datetime()
   doc.save()
 
-  return jsonify(get_document_internal(document_id))
+  return jsonify(doc.to_json())
 
 
 @app.route('/documents/<string:document_id>', methods = ['DELETE'])
@@ -142,10 +111,10 @@ def delete_document(document_id):
 def get_documents():
   sortBy = request.args.get('sortBy')
   order = request.args.get('order', 'desc')
-  from_index, to_index = get_pagination_params(request.args.get('page'),request.args.get('pageSize'))
+  from_index, to_index = get_pagination_params(request.args.get('page'), request.args.get('pageSize'))
   tags = request.args.getlist('tags')
 
-  search = Document.search()
+  search = db.Document.search()
   for tag in tags:
     search = search.filter('term', tags = tag)
 
@@ -157,7 +126,7 @@ def get_documents():
     )
 
   hits = search[from_index:to_index]
-  result = hits_to_docs(hits)
+  result = db.search_hits_to_jsons(hits)
   return jsonify(result)
 
 
@@ -165,30 +134,29 @@ def get_documents():
 def search_document():
   query = request.args.get('query', '')
   is_search_text = request.args.get('searchText', '')
-  from_index, to_index = get_pagination_params(request.args.get('page'),request.args.get('pageSize'))
-
+  from_index, to_index = get_pagination_params(request.args.get('page'), request.args.get('pageSize'))
 
   fields = ["name"]
   if is_search_text and is_search_text.lower() == "True".lower():
     fields.append("text")
 
   if len(request.args) == 0:
-    hits = Document.search().query("match_all").execute()
+    hits = db.Document.search().query("match_all").execute()
   else:
-    hits = Document.search().query("query_string", fields = fields, query = query)[from_index:to_index]
-  result = hits_to_docs(hits, include_text = True)
+    hits = db.Document.search().query("query_string", fields = fields, query = query)[from_index:to_index]
+  result = db.search_hits_to_jsons(hits, include_text = True)
   return jsonify(result)
 
 
 @app.route('/documents/<string:document_id>/text', methods = ['GET'])
 def get_document_text(document_id):
-  doc = get_document_internal(document_id, include_text = True)
+  doc = db.Document.get(document_id).to_json(include_text = True)
   return jsonify(doc['text'])
 
 
 @app.route('/documents/<string:document_id>/tokens', methods = ['GET'])
 def get_document_tokens(document_id):
-  tokens = Tokens.get(id = document_id)
+  tokens = db.Tokens.get(id = document_id)
   tokenList = list()
   tokenList.extend(tokens['entityTokens'])
   return jsonify(tokenList)
@@ -196,7 +164,7 @@ def get_document_tokens(document_id):
 
 @app.route('/documents/<string:document_id>/entities/labels', methods = ['GET'])
 def get_document_entity_labels(document_id):
-  labels = Labels.get(id = document_id)
+  labels = db.Labels.get(id = document_id)
   labelList = list()
   labelList.extend(labels['entityLabels'])
   return jsonify(labelList)
@@ -204,7 +172,7 @@ def get_document_entity_labels(document_id):
 
 @app.route('/documents/<string:document_id>/<int:token_index>/entities/labels', methods = ['GET'])
 def get_token_entity_labels(document_id, token_index):
-  labels = Labels.get(id = document_id)
+  labels = db.Labels.get(id = document_id)
   return labels.entityLabels[token_index]
 
 
@@ -212,9 +180,9 @@ def get_token_entity_labels(document_id, token_index):
 def set_token_entity_labels(document_id, token_index):
   label = request.args.get('label', 'NA')
 
-  labels = Labels.get(id = document_id, ignore = 404)
+  labels = db.Labels.get(id = document_id, ignore = 404)
   if not labels:
-    labels = Labels(meta = {'id': document_id}, entityLabels = [])
+    labels = db.Labels(meta = {'id': document_id}, entityLabels = [])
   labels['entityLabels'][token_index] = label
   labels.save()
   return "OK"
@@ -222,9 +190,9 @@ def set_token_entity_labels(document_id, token_index):
 
 @app.route('/documents/<document_id>/<token_index>/entities/labels', methods = ['DELETE'])
 def delete_token_entity_labels(document_id, token_index):
-  labels = Labels.get(id = document_id, ignore = 404)
+  labels = db.Labels.get(id = document_id, ignore = 404)
   if not labels:
-    labels = Labels(meta = {'id': document_id}, entityLabels = [])
+    labels = db.Labels(meta = {'id': document_id}, entityLabels = [])
   labels['entityLabels'][token_index] = ""
   labels.save()
   return "OK"
@@ -241,7 +209,7 @@ def get_document_mentions(document_id):
 
 
 if __name__ == '__main__':
-  Document.init()
-  Labels.init()
-  Tokens.init()
+  db.Document.init()
+  db.Labels.init()
+  db.Tokens.init()
   app.run(port = 12000, debug = True)

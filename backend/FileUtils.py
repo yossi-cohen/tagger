@@ -21,6 +21,4 @@ def parse_file(file_buffer):
   return parsedPdf['content']
 
 
-def get_current_datetime():
-  #return datetime.now(pytz.utc)
-  return datetime.now()
+
