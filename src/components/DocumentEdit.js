@@ -39,7 +39,7 @@ export class DocumentEdit extends React.Component {
         </small></PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
           {/* name */}
-          <Field component={FormField} name="documentName" label="Document Name" doValidate={true} />
+          <Field component={FormField} name="name" label="Document Name" doValidate={true} />
 
           {/* text */}
           <Field component={FormField} name="documentText" label="Document Text" doValidate={false} componentClass="textarea" placeholder="paste text here..." />
@@ -72,7 +72,7 @@ export class DocumentEdit extends React.Component {
         type: 'DOCUMENTS_ADD_EDIT',
         document: {
           id: values.id || 0,
-          documentName: values.documentName,
+          name: values.name,
           documentText: values.documentText,
           tags: this.refs.documentTags.tags(),
         },
@@ -93,8 +93,8 @@ const DocumentEditForm = reduxForm({
   form: 'document_edit',
   validate: function (values) {
     const errors = {};
-    if (!values.documentName) {
-      errors.documentName = 'Document Name is required';
+    if (!values.name) {
+      errors.name = 'Document Name is required';
     }
     return errors;
   },

@@ -53,7 +53,7 @@ export class LabelEntities extends React.Component {
       <div className="page-label-entities">
         <PageHeader>
           <small>
-            {'Entities: ' + (document.documentName ? document.documentName : '(undefined)')}
+            {'Entities: ' + (document.name ? document.name : '(undefined)')}
           </small>
           <div>
             <LabelSelector ref="labelSelector" labels={labels} selected='person' />

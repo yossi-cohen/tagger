@@ -19,7 +19,8 @@
     "build-prod": "webpack -p --config webpack.prod.config.js",
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill --require ignore-styles",
     "test-watch": "npm test -- --watch",
-    "api": "json-server --watch src/api/db.js --port 3004"
+    "api": "json-server --watch src/api/db.js --port 3004",
+    "backend": "export PYTHONPATH=`pwd` && python3 backend/server.py"
   },
   "babel": {
     "presets": [
@@ -31,6 +32,7 @@
   "author": "Catalin Luntraru",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.2",
     "prop-types": "^15.5.10",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",

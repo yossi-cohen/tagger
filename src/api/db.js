@@ -14,7 +14,7 @@ module.exports = () => {
         // documents
         data.documents.push({
             id: i,
-            documentName: `Document-${i}`,
+            name: `Document-${i}`,
             created: created,
             tags: [],
         });

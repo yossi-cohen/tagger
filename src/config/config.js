@@ -3,7 +3,8 @@ export default {
         "api" : "http://foo.app"
     },
     "dev": {
-        "api": "http://localhost:3004"
+        "api": "http://localhost:12000"
+        // "api": "http://localhost:3004"
     },
     "labels": [
         'person',

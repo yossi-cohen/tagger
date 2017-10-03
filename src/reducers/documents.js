@@ -1,5 +1,5 @@
 // documents reducer
-export default function documents(state = {}, action) {
+export default function documents(state = [], action) {
   switch (action.type) {
     case 'DOCUMENTS_LIST_SAVE':
       return action.documents;

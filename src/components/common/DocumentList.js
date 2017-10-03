@@ -33,6 +33,12 @@ export class DocumentList extends React.Component {
     const start_offset = (page - 1) * per_page;
     let start_count = 0;
 
+    if (documents.length == 0) {
+      return (
+        <div>no documents!</div>
+      );
+    }
+
     // show the list of documents
     return (
       <div>

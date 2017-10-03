@@ -1,6 +1,8 @@
 import config from '../config/config';
 const url = config[process.env.NODE_ENV].api;
 
+var axios = require('axios');
+
 // API Documents static class
 export default class ApiDocuments {
 
@@ -8,9 +10,9 @@ export default class ApiDocuments {
   // get a list of documents
   // -----------------------------------------------------
   static getList() {
-    return fetch(url + '/documents', {})
+    return axios.get(url + '/documents')
       .then(response => {
-        return response.json()
+        return response.data;
       });
   }
 
@@ -19,44 +21,36 @@ export default class ApiDocuments {
   // -----------------------------------------------------
   static addEdit(document) {
     if (document.id) {
-      return fetch(url + '/documents/' + document.id, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(document)
-      })
-        .then(response => { return response.json() });
+      return axios.put(url + '/documents/' + document.id, document)
+        .then(response => {
+          return response.data;
+        });
     }
 
     // add a new document
-    return fetch(url + '/documents/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(document)
-    })
-      .then(response => { return response.json() });
+    return axios.post(url + '/documents/', document)
+      .then(response => {
+        return response.data;
+      });
   }
 
   // -----------------------------------------------------
   // delete a document
   // -----------------------------------------------------
   static delete(documentId) {
-    return fetch(url + '/documents/' + documentId, {
-      method: 'DELETE'
-    })
-      .then(response => { return response.json() });
+    return axios.delete(url + '/documents/' + documentId)
+      .then(response => {
+        return response.data;
+      });
   }
 
   // -----------------------------------------------------
   // get document tokens
   // -----------------------------------------------------
   static getTokens(documentId) {
-    return fetch(url + '/documents/' + documentId + '/tokens', {})
+    return axios.get(url + '/documents/' + documentId + '/tokens')
       .then(response => {
-        return response.json();
+        return response.data;
       });
   }
 
@@ -67,13 +61,9 @@ export default class ApiDocuments {
     let new_token = { ...token }
     new_token.label = label;
 
-    return fetch(url + '/tokens/' + token.id, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(new_token)
-    })
-      .then(response => { return response.json() });
+    return axios.put(url + '/tokens/' + token.id, new_token)
+      .then(response => {
+        return response.data;
+      });
   }
 }

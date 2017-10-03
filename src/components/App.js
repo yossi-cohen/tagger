@@ -16,7 +16,7 @@ export class App extends React.Component {
   render() {
     // show the loading state while we wait for the app to load
     const { documents, children } = this.props;
-    if (!documents.length) {
+    if (!documents) { // lilo: find better way to test if loading
       return (
         <ProgressBar active now={100} />
       );

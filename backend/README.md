@@ -7,6 +7,7 @@
   - flask
   - elasticsearch_dsl
   - tika
+  - pip install flask-cors
 ## Guide
 - run elasticsearch locally
 - run server.py

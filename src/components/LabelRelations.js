@@ -17,7 +17,7 @@ export class LabelRelations extends React.Component {
       <div className="page-label-relations">
         <PageHeader>
         <small>
-            {'Relations: ' + (document.documentName ? document.documentName : '(undefined)')}
+            {'Relations: ' + (document.name ? document.name : '(undefined)')}
             <br/>
             NOT YET IMPLEMENTED
           </small>
