@@ -34,7 +34,7 @@ export default class ApiDocuments {
     let url = baseUrl + '/documents/count';
 
     if (tags && tags.length)
-      url += '&tags=' + tags;
+      url += '?tags=' + tags;
 
     return axios.get(url)
       .then(response => {

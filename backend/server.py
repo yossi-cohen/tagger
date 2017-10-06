@@ -10,6 +10,7 @@ import backend.DatabaseModel as db
 from backend.FileUtils import *
 from backend.TokenizerWrapper import tokenize
 import logging
+from elasticsearch_dsl import Search
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
 
@@ -29,8 +30,6 @@ app.config['CORS_HEADERS'] = ['Content-Type']
 
 # convert (page, pageSize) to (from_index, to_index)
 def get_pagination_params(page, pageSize):
-  print('lilo2 ---------- page: ', page)
-  print('lilo2 ---------- pageSize: ', pageSize)
   if not page:
     page = 0
 
@@ -148,10 +147,6 @@ def get_documents():
   from_index, to_index = get_pagination_params(request.args.get('page'), request.args.get('pageSize'))
   tags = request.args.getlist('tags')
 
-  print('lilo ---------- page: ', request.args.get('page'))
-  print('lilo ---------- pageSize: ', request.args.get('pageSize'))
-  print('lilo ---------- from_index, to_index: ', from_index, to_index)
-
   search = db.Document.search()
   for tag in tags:
     search = search.filter('term', tags = tag)
@@ -174,15 +169,10 @@ def get_documents():
 @app.route('/documents/count/', methods = ['GET'])
 @cross_origin()
 def count_documents():
+  search = Search()
   tags = request.args.getlist('tags')
-  if tags:
-    print(tags)
-
-  search = db.Document.search()
-
   for tag in tags:
     search = search.filter('term', tags = tag)
-
   return jsonify(search.count())
 
 # -----------------------------------------------------
