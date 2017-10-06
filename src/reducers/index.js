@@ -2,6 +2,8 @@ import { combineReducers } from "redux";
 import { routerReducer } from "react-router-redux";
 import { reducer as formReducer } from "redux-form";
 import documents from "./documents";
+import tags from "./tags";
+import paging from "./paging";
 
 // main reducers
 export const reducers = combineReducers({
@@ -18,4 +20,6 @@ export const reducers = combineReducers({
     }
   }),
   documents: documents,
+  tags: tags, // tags filter
+  paging: paging, 
 });

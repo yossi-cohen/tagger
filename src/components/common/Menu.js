@@ -21,10 +21,10 @@ export default class Menu extends React.Component {
           </NavItem>
         </LinkContainer>
         <NavItem>
-          <Filter />
+          <Search autoFocus={true} />
         </NavItem>
         <NavItem>
-          <Search autoFocus={true} />
+          <Filter />
         </NavItem>
       </Nav>
     );

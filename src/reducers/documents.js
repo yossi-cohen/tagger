@@ -5,36 +5,47 @@ export default function documents(state = [], action) {
       return action.documents;
 
     case 'DOCUMENTS_ADD_SAVE':
-      const document = action.document;
-      document.id = document.id || Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-      return [...state, document];
+      return [...state, action.document];
 
     case 'DOCUMENTS_EDIT_SAVE':
       return state.map(document =>
-        Number(document.id) === Number(action.document.id) ? { ...action.document } : document
+        document.id == action.document.id ? { ...action.document } : document
       );
 
     case 'DOCUMENTS_DELETE_SAVE':
       return state.filter(document =>
-        Number(document.id) !== Number(action.document_id)
+        document.id != action.documentId
       );
 
-    case 'DOCUMENT_TOKENS_SAVE':
-      const doc = { ...action.document };
-      doc.tokens = [...action.tokens];
-      return state.map(document =>
-        Number(document.id) === Number(action.document.id) ? doc : document
-      );
+    case 'DOCUMENT_TEXT_SAVE': {
+      return state.map(document => {
+        if (document.id != action.documentId)
+          return document;
+        let doc = { ...document };
+        doc.text = String(action.text);
+        return doc;
+      });
+    }
+
+    case 'DOCUMENT_TOKENS_SAVE': {
+      return state.map(document => {
+        if (document.id != action.documentId)
+          return document;
+        let doc = { ...document };
+        doc.tokens = [...action.tokens];
+        return doc;
+      });
+    }
 
     case 'DOCUMENT_SET_TOKEN_LABEL_SAVE':
       return state.map(document => {
-        if (Number(document.id) !== Number(action.token.documentId))
+        if (document.id != action.token.documentId)
           return document;
 
         let doc = { ...document };
 
         doc.tokens = doc.tokens.map(token => {
-          if (Number(token.id) !== Number(action.token.id))
+          if (token.id != action.token.id)
             return token;
           let tok = { ...action.token };
           tok.label = action.label;

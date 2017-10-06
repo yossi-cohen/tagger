@@ -29,7 +29,7 @@ export class LabelRelations extends React.Component {
 
 // export the connected class
 function mapStateToProps(state, own_props) {
-  const document = state.documents.find(x => Number(x.id) === Number(own_props.params.id)) || {};
+  const document = state.documents.find(x => x.id == own_props.params.id) || {};
   return {
     document: document,
   };

@@ -1,11 +1,15 @@
 import React from "react";
+import { connect } from "react-redux";
 import DocumentTags from './DocumentTags';
 
 // Filter component
-export default class Filter extends React.Component {
+class Filter extends React.Component {
   // constructor
   constructor(props) {
     super(props);
+
+    this.handleAddition = this.handleAddition.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 
     this.state = {
       tagsSuggestions: [] //lilo:TODO - read from backend
@@ -18,7 +22,7 @@ export default class Filter extends React.Component {
     return (
       <DocumentTags
         ref="documentTags"
-        placeholder="Type tag filter..."
+        placeholder="add tag filter..."
         handleAddition={this.handleAddition}
         handleDelete={this.handleDelete}
         tags={document.tags}
@@ -27,12 +31,29 @@ export default class Filter extends React.Component {
   }
 
   handleAddition(tags) {
-    //lilo:TODO
-    console.log(tags);
+    this.props.dispatch({ type: 'SET_TAGS_FILTER', tags: tags });
+    this.props.dispatch({
+      type: 'DOCUMENTS_FETCH_LIST',
+      page: this.props.page,
+      tags: tags,
+    });
   }
 
   handleDelete(tags) {
-    //lilo:TODO
-    console.log(tags);
+    this.props.dispatch({ type: 'SET_TAGS_FILTER', tags: tags });
+    this.props.dispatch({
+      type: 'DOCUMENTS_FETCH_LIST',
+      page: this.props.page,
+      tags: tags,
+    });
   }
 }
+
+// export the connected class
+function mapStateToProps(state) {
+  return {
+    page: Number(state.routing.locationBeforeTransitions.query.page) || 1,
+  };
+}
+
+export default connect(mapStateToProps)(Filter);

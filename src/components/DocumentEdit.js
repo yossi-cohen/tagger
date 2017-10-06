@@ -12,7 +12,8 @@ import {
   FormControl,
   HelpBlock,
   Row,
-  Col
+  Col,
+  ProgressBar
 } from "react-bootstrap";
 
 // Document add/edit page component
@@ -29,36 +30,46 @@ export class DocumentEdit extends React.Component {
     this.formSubmit = this.formSubmit.bind(this);
   }
 
+  // pre-render logic
+  componentWillMount() {
+    // the first time we load the document, 
+    // we need to load also the document text
+    const documentId = this.props.params.id;
+    if (documentId)
+      this.props.dispatch({ type: 'DOCUMENT_GET_TEXT', documentId: documentId });
+  }
+
   // render
   render() {
     const { document, handleSubmit, error, invalid, submitting } = this.props;
+
     return (
       <div className="page-document-edit">
         <PageHeader><small>
-          {'Document ' + (document.id ? 'edit' : 'add')}
+          {(document.id ? 'Edit ' : 'Add ') + 'document'}
         </small></PageHeader>
         <Form horizontal onSubmit={handleSubmit(this.formSubmit)}>
           {/* name */}
           <Field component={FormField} name="name" label="Document Name" doValidate={true} />
 
           {/* text */}
-          <Field component={FormField} name="documentText" label="Document Text" doValidate={false} componentClass="textarea" placeholder="paste text here..." />
+          <Field component={FormField} name="text" label="Document Text" doValidate={false} componentClass="textarea" placeholder="paste text here..." />
 
           {/* tags */}
           <FormGroup>
             <Row>
               <Col sm={3}>{'Document Tags'}</Col>
               <Col sm={9}>
-                <DocumentTags 
+                <DocumentTags
                   ref="documentTags"
-                  tags={document.tags} 
+                  tags={document.tags}
                   suggestions={this.state.tagsSuggestions} />
               </Col>
             </Row>
           </FormGroup>
 
           {/* submit */}
-          <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..." buttonSave="Save Document" />
+          <FormSubmit error={error} invalid={invalid} submitting={submitting} buttonSaveLoading="Saving..." buttonSave="Save" />
         </Form>
       </div>
     );
@@ -73,7 +84,7 @@ export class DocumentEdit extends React.Component {
         document: {
           id: values.id || 0,
           name: values.name,
-          documentText: values.documentText,
+          text: values.text,
           tags: this.refs.documentTags.tags(),
         },
         callbackError: (error) => {
@@ -93,19 +104,21 @@ const DocumentEditForm = reduxForm({
   form: 'document_edit',
   validate: function (values) {
     const errors = {};
-    if (!values.name) {
+    if (!values.name)
       errors.name = 'Document Name is required';
-    }
     return errors;
   },
 })(DocumentEdit);
 
 // export the connected class
 function mapStateToProps(state, own_props) {
-  const document = state.documents.find(x => Number(x.id) === Number(own_props.params.id)) || {};
+  const document = state.documents.find(x => x.id == own_props.params.id) || {};
+  console.log('lilo ------------------------------------- document:')
+  console.log(document);
   return {
-    document: document,
     initialValues: document,
+    document: document,
   };
 }
+
 export default connect(mapStateToProps)(DocumentEditForm);

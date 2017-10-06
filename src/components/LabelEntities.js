@@ -24,8 +24,7 @@ export class LabelEntities extends React.Component {
   // pre-render logic
   componentWillMount() {
     // the first time we load the document, we need that tokens list
-    if (!this.props.document.tokens)
-      this.props.dispatch({ type: 'DOCUMENT_GET_TOKENS', document: this.props.document });
+    this.props.dispatch({ type: 'DOCUMENT_GET_TOKENS', documentId: this.props.params.id });
   }
 
   // render
@@ -34,7 +33,7 @@ export class LabelEntities extends React.Component {
     const tokens = document.tokens ? document.tokens : [];
     const labels = config.labels;
 
-    // show the loading state while we wait for the app to load
+    // show the loading state while we wait for the tokens to load
     if (!tokens.length) {
       return (
         <ProgressBar active now={100} />
@@ -104,7 +103,7 @@ export class LabelEntities extends React.Component {
 
 // export the connected class
 function mapStateToProps(state, own_props) {
-  const document = state.documents.find(x => Number(x.id) === Number(own_props.params.id)) || {};
+  const document = state.documents.find(x => x.id == own_props.params.id) || {};
   return {
     document: document,
   };

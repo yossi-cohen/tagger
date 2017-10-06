@@ -5,30 +5,30 @@ import { FormGroup, FormControl, HelpBlock, Row, Col } from "react-bootstrap";
 export default class FormField extends React.Component {
   // render
   render() {
-    const {className, doValidate, meta} = this.props;
+    const { className, doValidate, meta } = this.props;
     if (doValidate) {
       return (
         <FormGroup className={className}
           validationState={!meta.touched ? null : (meta.error ? 'error' : 'success')}>
           {this.content()}
-          <FormControl.Feedback/>
+          <FormControl.Feedback />
           <HelpBlock>
             {meta.touched && meta.error ? meta.error : null}
           </HelpBlock>
         </FormGroup>
       );
-    } else {
-      return (
-        <FormGroup className={className}>
-          {this.content()}
-        </FormGroup>
-      );
     }
+
+    return (
+      <FormGroup className={className}>
+        {this.content()}
+      </FormGroup>
+    );
   }
 
   // the field content
   content() {
-    const {theme, label} = this.props;
+    const { theme, label } = this.props;
     if ('other_theme' === theme) {
       // layout for some other theme
     } else {
@@ -44,7 +44,8 @@ export default class FormField extends React.Component {
 
   // the field itself
   field() {
-    const {input, componentClass, type, placeholder, children} = this.props;
+    const { input, componentClass, type, placeholder, children } = this.props;
+    console.log('lilo ------------- input.name:' + input.name + ' input.value: ' + input.value);
     return (
       <FormControl {...input} componentClass={componentClass} type={type} placeholder={placeholder}>
         {children}

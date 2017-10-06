@@ -4,10 +4,17 @@ from elasticsearch_dsl import Date, DocType, Integer, Keyword, Text
 from elasticsearch_dsl.connections import connections
 from elasticsearch import helpers
 
-DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
-
 es = connections.create_connection(hosts = ['localhost'])
 
+# -----------------------------------------------------
+# helper methods
+# -----------------------------------------------------
+
+DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f%Z'
+
+def get_current_datetime():
+  # return datetime.now(pytz.utc)
+  return datetime.now()
 
 def search_hits_to_jsons(hits, include_text = None):
   result = []
@@ -20,16 +27,17 @@ def search_hits_to_jsons(hits, include_text = None):
       'created': dict.get('created', get_current_datetime()).strftime(DATETIME_FORMAT),
       'modified': dict.get('modified', get_current_datetime()).strftime(DATETIME_FORMAT)
     }
+
     if include_text:
       doc['text'] = dict.get('text', '')
     result.append(doc)
+
   return result
 
 
-def get_current_datetime():
-  # return datetime.now(pytz.utc)
-  return datetime.now()
-
+# -----------------------------------------------------
+# Document
+# -----------------------------------------------------
 
 class Document(DocType):
   name = Text(fields = {'keyword': Keyword()})
@@ -51,7 +59,7 @@ class Document(DocType):
     doc = {
       'id': self.meta.id,
       'name': self.name,
-      'tags': list(self.tags),
+      'tags': list(self.tags) if None != self.tags else [],
       'created': self.created if self.created else get_current_datetime().strftime(DATETIME_FORMAT),
       'modified': self.modified if self.modified else get_current_datetime().strftime(DATETIME_FORMAT),
     }
@@ -63,6 +71,9 @@ class Document(DocType):
   class Meta:
     index = 'documents'
 
+# -----------------------------------------------------
+# Token
+# -----------------------------------------------------
 
 class Token(DocType):
   documentId = Keyword()
@@ -87,11 +98,7 @@ class Token(DocType):
     helpers.bulk(es, actions)
 
   def delete_tokens(self, documentId):
-    tokens = self.search().filter('term', documentId = documentId).sort({
-      "index": {
-        "order": "asc"
-      }
-    }).execute()
+    tokens = self.search().filter('term', documentId = documentId).execute()
 
     actions = []
     for token in tokens:
@@ -99,9 +106,6 @@ class Token(DocType):
       action['_op_type'] = 'delete'
       actions.append(action)
     helpers.bulk(es, actions)
-
-
-
 
   def to_json(self):
     dict = {
@@ -112,9 +116,12 @@ class Token(DocType):
       'token': self.token,
       'label': self.label
     }
+
     return dict
 
-
+# -----------------------------------------------------
+# Mention
+# -----------------------------------------------------
 
 class Mention(DocType):
   mentionId = Keyword()
@@ -126,6 +133,9 @@ class Mention(DocType):
   class Meta:
     index = 'mentions'
 
+# -----------------------------------------------------
+# Entity
+# -----------------------------------------------------
 
 class Entity(DocType):
   entityId = Keyword()

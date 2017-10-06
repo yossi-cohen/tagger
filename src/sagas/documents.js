@@ -8,9 +8,18 @@ import sort_by from "../util/arraySortby"
 export function* documentsFetchList(action) {
   // call the api to get the documents list
   try {
-    const documents = yield call(ApiDocuments.getList);
+    const documents = yield call(ApiDocuments.getList,
+      action.page, action.pageSize, action.sortBy, action.order, action.tags);
 
-    // save the documents in state
+    const count = yield call(ApiDocuments.count, action.tags);
+
+    // save the documents count in the state
+    yield put({
+      type: 'DOCUMENTS_LIST_COUNT_SAVE',
+      total: count
+    });
+
+    // save the documents in the state
     yield put({
       type: 'DOCUMENTS_LIST_SAVE',
       documents: documents,
@@ -30,13 +39,13 @@ export function* documentsFetchList(action) {
 export function* documentsAddEdit(action) {
   try {
     // call the api to add/edit the document
-    yield call(ApiDocuments.addEdit, action.document);
+    const document = yield call(ApiDocuments.addEdit, action.document);
     //return action.callbackError("Some error");   // show an error when the API fails
 
     // update the state by adding/editing the document
     yield put({
       type: action.document.id ? 'DOCUMENTS_EDIT_SAVE' : 'DOCUMENTS_ADD_SAVE',
-      document: action.document,
+      document: document,
     });
 
     // success
@@ -45,7 +54,7 @@ export function* documentsAddEdit(action) {
     // error
     yield put({
       type: 'DOCUMENTS_ADD_EDIT_FAILED',
-      documentId: action.document_id,
+      documentId: action.documentId,
       error: e,
     });
   }
@@ -57,18 +66,42 @@ export function* documentsAddEdit(action) {
 export function* documentsDelete(action) {
   // call the api to delete the document
   try {
-    yield call(ApiDocuments.delete, action.document_id);
+    yield call(ApiDocuments.delete, action.documentId);
 
     // update the state by removing the document
     yield put({
       type: 'DOCUMENTS_DELETE_SAVE',
-      document_id: action.document_id,
+      documentId: action.documentId,
     });
   } catch (e) {
     // error
     yield put({
       type: 'DOCUMENTS_DELETE_FAILED',
-      documentId: action.document_id,
+      documentId: action.documentId,
+      error: e,
+    });
+  }
+}
+
+// -----------------------------------------------------------
+// get document text
+// -----------------------------------------------------------
+export function* documentGetText(action) {
+  // call the api to get the document text
+  try {
+    let text = yield call(ApiDocuments.getText, action.documentId);
+
+    // save the tokens in the state
+    yield put({
+      type: 'DOCUMENT_TEXT_SAVE',
+      documentId: action.documentId,
+      text: text,
+    });
+  } catch (e) {
+    // error
+    yield put({
+      type: 'DOCUMENT_GET_TEXT_FAILED',
+      documentId: action.documentId,
       error: e,
     });
   }
@@ -80,20 +113,20 @@ export function* documentsDelete(action) {
 export function* documentGetTokens(action) {
   // call the api to get the document tokens
   try {
-    let tokens = yield call(ApiDocuments.getTokens, action.document.id);
-    tokens = tokens.sort(sort_by('index', false, parseInt));
+    let tokens = yield call(ApiDocuments.getTokens, action.documentId);
+    //lilo: tokens = tokens.sort(sort_by('index', false, parseInt));
 
     // save the tokens in the state
     yield put({
       type: 'DOCUMENT_TOKENS_SAVE',
-      document: action.document,
+      documentId: action.documentId,
       tokens: tokens,
     });
   } catch (e) {
     // error
     yield put({
       type: 'DOCUMENT_GET_TOKENS_FAILED',
-      document: action.document,
+      documentId: action.documentId,
       error: e,
     });
   }

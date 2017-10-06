@@ -27,9 +27,9 @@ export class DocumentList extends React.Component {
   // render
   render() {
     // pagination
-    const { documents, page } = this.props;
+    const { documents, page, paging } = this.props;
     const per_page = 10;
-    const pages = Math.ceil(documents.length / per_page);
+    const pages = Math.ceil(paging.total / per_page);
     const start_offset = (page - 1) * per_page;
     let start_count = 0;
 
@@ -102,7 +102,7 @@ export class DocumentList extends React.Component {
     // delete the document
     this.props.dispatch({
       type: 'DOCUMENTS_DELETE',
-      document_id: this.state.delete_document.id,
+      documentId: this.state.delete_document.id,
     });
 
     // hide the prompt
@@ -114,6 +114,8 @@ export class DocumentList extends React.Component {
 function mapStateToProps(state) {
   return {
     documents: state.documents,
+    tags: state.tags,
+    paging: state.paging,
 
     // https://github.com/reactjs/react-router-redux#how-do-i-access-router-state-in-a-container-component
     // react-router-redux wants you to get the url data by passing the props through a million components instead of

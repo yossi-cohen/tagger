@@ -4,6 +4,7 @@ import {
   documentsFetchList,
   documentsAddEdit,
   documentsDelete,
+  documentGetText,
   documentGetTokens,
   documentSetTokenLabel
 } from "./documents";
@@ -14,6 +15,7 @@ export function* sagas() {
     fork(takeLatest, 'DOCUMENTS_FETCH_LIST', documentsFetchList),
     fork(takeLatest, 'DOCUMENTS_ADD_EDIT', documentsAddEdit),
     fork(takeLatest, 'DOCUMENTS_DELETE', documentsDelete),
+    fork(takeLatest, 'DOCUMENT_GET_TEXT', documentGetText),
     fork(takeLatest, 'DOCUMENT_GET_TOKENS', documentGetTokens),
     fork(takeLatest, 'DOCUMENT_SET_TOKEN_LABEL', documentSetTokenLabel),
   ];
