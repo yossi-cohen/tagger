@@ -13,6 +13,9 @@ export class DocumentList extends React.Component {
 
     // default ui local state
     this.state = {
+      pageSize: 10,
+      sortBy: 'name',
+      order: 'asc',
       delete_show: false,
       delete_document: {},
     };
@@ -24,20 +27,44 @@ export class DocumentList extends React.Component {
     this.documentDelete = this.documentDelete.bind(this);
   }
 
+  // pre-render logic
+  componentWillMount() {
+    // the first time we load, we need that documents list
+    this.fetchPage(this.props);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.props.page != nextProps.page) {
+      this.fetchPage(nextProps);
+    }
+  }
+
+  fetchPage(props) {
+    const { page, tags } = props;
+
+    props.dispatch({
+      type: 'DOCUMENTS_FETCH_LIST',
+      page: page,
+      pageSize: this.state.pageSize,
+      sortBy: this.state.sortBy,
+      order: this.state.order,
+      tags: tags,
+    });
+  }
+
   // render
   render() {
-    // pagination
     const { documents, page, paging } = this.props;
-    const per_page = 10;
-    const pages = Math.ceil(paging.total / per_page);
-    const start_offset = (page - 1) * per_page;
-    let start_count = 0;
 
-    if (documents.length == 0) {
+    // show the loading state while we wait for the app to load
+    if (!documents) {
       return (
-        <div>no documents!</div>
+        <ProgressBar active now={100} />
       );
     }
+
+    // pagination
+    const pages = Math.ceil(paging.total / this.state.pageSize);
 
     // show the list of documents
     return (
@@ -55,12 +82,9 @@ export class DocumentList extends React.Component {
           </thead>
           <tbody>
             {documents.map((document, index) => {
-              if (index >= start_offset && start_count < per_page) {
-                start_count++;
-                return (
-                  <DocumentListElement key={index} document={document} showDelete={this.showDelete} />
-                );
-              }
+              return (
+                <DocumentListElement key={index} document={document} showDelete={this.showDelete} />
+              );
             })}
           </tbody>
         </Table>
@@ -112,15 +136,16 @@ export class DocumentList extends React.Component {
 
 // export the connected class
 function mapStateToProps(state) {
+  // https://github.com/reactjs/react-router-redux#how-do-i-access-router-state-in-a-container-component
+  // react-router-redux wants you to get the url data by passing the props through a million components instead of
+  // reading it directly from the state, which is basically why you store the url data in the state (to have access to it)
+  const page = Number(state.routing.locationBeforeTransitions.query.page) || 1;
+
   return {
     documents: state.documents,
     tags: state.tags,
     paging: state.paging,
-
-    // https://github.com/reactjs/react-router-redux#how-do-i-access-router-state-in-a-container-component
-    // react-router-redux wants you to get the url data by passing the props through a million components instead of
-    // reading it directly from the state, which is basically why you store the url data in the state (to have access to it)
-    page: Number(state.routing.locationBeforeTransitions.query.page) || 1,
+    page: page,
   };
 }
 
