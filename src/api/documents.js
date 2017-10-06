@@ -9,7 +9,7 @@ export default class ApiDocuments {
   // -----------------------------------------------------
   // get a list of documents
   // -----------------------------------------------------
-  static getList(page, pageSize, sortBy, order, tags) {
+  static getList(page, pageSize, sortBy, order, tags = []) {
     let url = baseUrl + '/documents';
 
     url += '?page=' + (page ? page - 1 : 0);
@@ -18,8 +18,9 @@ export default class ApiDocuments {
     url += '&sortBy=' + (sortBy || 'name');
     url += '&order=' + (order || 'asc');
 
-    if (tags && tags.length)
-      url += '&tags=' + tags;
+    for (let i = 0; i < tags.length; i++) {
+      url += ('&tags=' + tags[i]);
+    }
 
     return axios.get(url)
       .then(response => {

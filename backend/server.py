@@ -171,8 +171,12 @@ def get_documents():
 def count_documents():
   search = Search()
   tags = request.args.getlist('tags')
-  for tag in tags:
-    search = search.filter('term', tags = tag)
+
+  # lilo
+  search = search.filter('terms', tags=tags)
+  # for tag in tags:
+  #   search = search.filter('term', tags = tag)
+
   return jsonify(search.count())
 
 # -----------------------------------------------------
