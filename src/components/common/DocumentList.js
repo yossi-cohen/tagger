@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import DocumentListElement from "./DocumentListElement";
 import DocumentDeletePrompt from "./DocumentDeletePrompt";
-import { Table, Pagination } from "react-bootstrap";
+import { Table, Pagination, ProgressBar } from "react-bootstrap";
 
 // Document list component
 export class DocumentList extends React.Component {
@@ -54,18 +54,17 @@ export class DocumentList extends React.Component {
 
   // render
   render() {
+    // pagination
     const { documents, page, paging } = this.props;
+    const pages = Math.ceil(paging.total / this.state.pageSize);
 
     // show the loading state while we wait for the app to load
-    if (!documents) {
+    if (!this.props.documents || !pages) {
       return (
         <ProgressBar active now={100} />
       );
     }
-
-    // pagination
-    const pages = Math.ceil(paging.total / this.state.pageSize);
-
+    
     // show the list of documents
     return (
       <div>

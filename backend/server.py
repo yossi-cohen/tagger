@@ -139,14 +139,14 @@ def delete_document(document_id):
 # get_documents (paged)
 # -----------------------------------------------------
 
-@app.route('/documents', methods = ['GET'])
+@app.route('/documents/', methods = ['GET'])
 @cross_origin()
 def get_documents():
   sortBy = request.args.get('sortBy')
-  order = request.args.get('order', 'desc')
+  order = request.args.get('order', 'asc')
   from_index, to_index = get_pagination_params(request.args.get('page'), request.args.get('pageSize'))
   tags = request.args.getlist('tags')
-
+  
   search = db.Document.search()
   for tag in tags:
     search = search.filter('term', tags = tag)
@@ -158,26 +158,15 @@ def get_documents():
       {sortBy: {"order": order}}
     )
 
+  total = search.count()
   hits = search[from_index:to_index]
-  result = db.search_hits_to_jsons(hits)
+  documents = db.search_hits_to_jsons(hits)
+  result = {
+    'total': total, 
+    'documents': documents
+  }
+
   return jsonify(result)
-
-# -----------------------------------------------------
-# count_documents (matching tags filter)
-# -----------------------------------------------------
-
-@app.route('/documents/count/', methods = ['GET'])
-@cross_origin()
-def count_documents():
-  search = Search()
-  tags = request.args.getlist('tags')
-
-  # lilo
-  search = search.filter('terms', tags=tags)
-  # for tag in tags:
-  #   search = search.filter('term', tags = tag)
-
-  return jsonify(search.count())
 
 # -----------------------------------------------------
 # search_documents

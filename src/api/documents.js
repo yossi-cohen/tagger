@@ -10,7 +10,7 @@ export default class ApiDocuments {
   // get a list of documents
   // -----------------------------------------------------
   static getList(page, pageSize, sortBy, order, tags = []) {
-    let url = baseUrl + '/documents';
+    let url = baseUrl + '/documents/';
 
     url += '?page=' + (page ? page - 1 : 0);
     url += '&pageSize=' + (pageSize || 10);
@@ -21,26 +21,13 @@ export default class ApiDocuments {
     for (let i = 0; i < tags.length; i++) {
       url += ('&tags=' + tags[i]);
     }
-
-    return axios.get(url)
+    
+    console.log(url);
+    
+  return axios.get(url)
       .then(response => {
         return response.data;
-      });
-  }
-
-  // -----------------------------------------------------
-  // count documents
-  // -----------------------------------------------------
-  static count(tags) {
-    let url = baseUrl + '/documents/count';
-
-    if (tags && tags.length)
-      url += '?tags=' + tags;
-
-    return axios.get(url)
-      .then(response => {
-        return response.data;
-      });
+      })
   }
 
   // -----------------------------------------------------

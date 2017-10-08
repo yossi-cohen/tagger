@@ -8,22 +8,29 @@ import sort_by from "../util/arraySortby"
 export function* documentsFetchList(action) {
   // call the api to get the documents list
   try {
+    console.log('lilo - 0 ----------------- documentsFetchList')
     const documents = yield call(ApiDocuments.getList,
-      action.page, action.pageSize, action.sortBy, action.order, action.tags);
+      action.page,
+      action.pageSize,
+      action.sortBy,
+      action.order,
+      action.tags);
 
-    const count = yield call(ApiDocuments.count, action.tags);
+    console.log(documents)
 
-    // save the documents count in the state
-    yield put({
-      type: 'DOCUMENTS_LIST_COUNT_SAVE',
-      total: count
-    });
+    yield [
+      // save the documents count in the state
+      yield put({
+        type: 'DOCUMENTS_LIST_COUNT_SAVE',
+        total: documents.total
+      }),
 
-    // save the documents in the state
-    yield put({
-      type: 'DOCUMENTS_LIST_SAVE',
-      documents: documents,
-    });
+      // save the documents in the state
+      yield put({
+        type: 'DOCUMENTS_LIST_SAVE',
+        documents: documents.documents,
+      })
+    ];
   } catch (e) {
     // error
     yield put({
