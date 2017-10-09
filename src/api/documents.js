@@ -1,5 +1,5 @@
 import config from '../config/config';
-const baseUrl = config[process.env.NODE_ENV].api;
+const baseUrl = config.baseUrl;
 
 var axios = require('axios');
 

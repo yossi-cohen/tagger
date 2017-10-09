@@ -1,11 +1,10 @@
 import ApiDocuments from "../api/documents";
 import { call, put } from "redux-saga/effects";
-import sort_by from "../util/arraySortby"
 
 // -----------------------------------------------------------
 // fetch the document's list
 // -----------------------------------------------------------
-export function* documentsFetchList(action) {
+export function* fetchDocListSaga(action) {
   // call the api to get the documents list
   try {
     const documents = yield call(ApiDocuments.getList,
@@ -16,22 +15,22 @@ export function* documentsFetchList(action) {
       action.tags);
 
     yield [
-      // save the documents count in the state
+      // save the documents total count in the state
       yield put({
-        type: 'DOCUMENTS_LIST_COUNT_SAVE',
+        type: 'DOCUMENT_LIST_COUNT_SAVE',
         total: documents.total
       }),
 
       // save the documents in the state
       yield put({
-        type: 'DOCUMENTS_LIST_SAVE',
+        type: 'DOCUMENT_LIST_SAVE',
         documents: documents.documents,
       })
     ];
   } catch (e) {
     // error
     yield put({
-      type: 'DOCUMENTS_GET_LIST_FAILED',
+      type: 'DOCUMENT_GET_LIST_FAILED',
       error: e,
     });
   }
@@ -40,7 +39,7 @@ export function* documentsFetchList(action) {
 // -----------------------------------------------------------
 // add/edit a document
 // -----------------------------------------------------------
-export function* documentsAddEdit(action) {
+export function* addEditDocumentSaga(action) {
   try {
     // call the api to add/edit the document
     const document = yield call(ApiDocuments.addEdit, action.document);
@@ -48,7 +47,7 @@ export function* documentsAddEdit(action) {
 
     // update the state by adding/editing the document
     yield put({
-      type: action.document.id ? 'DOCUMENTS_EDIT_SAVE' : 'DOCUMENTS_ADD_SAVE',
+      type: action.document.id ? 'DOCUMENT_EDIT_SAVE' : 'DOCUMENT_ADD_SAVE',
       document: document,
     });
 
@@ -57,7 +56,7 @@ export function* documentsAddEdit(action) {
   } catch (e) {
     // error
     yield put({
-      type: 'DOCUMENTS_ADD_EDIT_FAILED',
+      type: 'DOCUMENT_ADD_EDIT_FAILED',
       documentId: action.documentId,
       error: e,
     });
@@ -67,20 +66,20 @@ export function* documentsAddEdit(action) {
 // -----------------------------------------------------------
 // delete a document
 // -----------------------------------------------------------
-export function* documentsDelete(action) {
+export function* deleteDocumentSaga(action) {
   // call the api to delete the document
   try {
     yield call(ApiDocuments.delete, action.documentId);
 
     // update the state by removing the document
     yield put({
-      type: 'DOCUMENTS_DELETE_SAVE',
+      type: 'DOCUMENT_DELETE_SAVE',
       documentId: action.documentId,
     });
   } catch (e) {
     // error
     yield put({
-      type: 'DOCUMENTS_DELETE_FAILED',
+      type: 'DOCUMENT_DELETE_FAILED',
       documentId: action.documentId,
       error: e,
     });
@@ -90,7 +89,7 @@ export function* documentsDelete(action) {
 // -----------------------------------------------------------
 // get document text
 // -----------------------------------------------------------
-export function* documentGetText(action) {
+export function* getTextSaga(action) {
   // call the api to get the document text
   try {
     let text = yield call(ApiDocuments.getText, action.documentId);
@@ -114,11 +113,10 @@ export function* documentGetText(action) {
 // -----------------------------------------------------------
 // get document tokens
 // -----------------------------------------------------------
-export function* documentGetTokens(action) {
+export function* getTokensSaga(action) {
   // call the api to get the document tokens
   try {
     let tokens = yield call(ApiDocuments.getTokens, action.documentId);
-    //lilo: tokens = tokens.sort(sort_by('index', false, parseInt));
 
     // save the tokens in the state
     yield put({
@@ -139,7 +137,7 @@ export function* documentGetTokens(action) {
 // -----------------------------------------------------------
 // set token label
 // -----------------------------------------------------------
-export function* documentSetTokenLabel(action) {
+export function* setTokenLabelSaga(action) {
   // call the api to set the token label
   try {
     yield call(ApiDocuments.setTokenLabel, action.token, action.label);

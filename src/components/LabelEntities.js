@@ -1,13 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { push } from "react-router-redux";
 import LabelSelector from './LabelSelector';
 import config from '../config/config';
 import {
   PageHeader,
   Panel,
-  DropdownButton,
-  MenuItem,
   Button,
   OverlayTrigger,
   Tooltip,
@@ -16,11 +13,6 @@ import {
 
 // Label Entities component
 export class LabelEntities extends React.Component {
-  // constructor
-  constructor(props) {
-    super(props);
-  }
-
   // pre-render logic
   componentWillMount() {
     // the first time we load the document, we need that tokens list
@@ -68,7 +60,7 @@ export class LabelEntities extends React.Component {
                   return (
                     <mark
                       key={index}
-                      data-entity={token.label && token.label != 'NA' ? token.label : undefined}>
+                      data-entity={token.label && token.label !== 'NA' ? token.label : undefined}>
                       <span onClick={(e) => this.handleTokenClick(e, index)}>{token.token} </span>
                     </mark>);
                 })
@@ -103,7 +95,7 @@ export class LabelEntities extends React.Component {
 
 // export the connected class
 function mapStateToProps(state, own_props) {
-  const document = state.documents.find(x => x.id == own_props.params.id) || {};
+  const document = state.documents.find(x => x.id === own_props.params.id) || {};
   return {
     document: document,
   };

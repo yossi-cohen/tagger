@@ -43,7 +43,7 @@ export class DocumentList extends React.Component {
     const { page, tags } = props;
 
     props.dispatch({
-      type: 'DOCUMENTS_FETCH_LIST',
+      type: 'DOCUMENT_FETCH_LIST',
       page: page,
       pageSize: this.state.pageSize,
       sortBy: this.state.sortBy,
@@ -124,7 +124,7 @@ export class DocumentList extends React.Component {
   documentDelete() {
     // delete the document
     this.props.dispatch({
-      type: 'DOCUMENTS_DELETE',
+      type: 'DOCUMENT_DELETE',
       documentId: this.state.delete_document.id,
     });
 

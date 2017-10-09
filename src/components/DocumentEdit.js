@@ -9,11 +9,8 @@ import {
   PageHeader,
   Form,
   FormGroup,
-  FormControl,
-  HelpBlock,
   Row,
-  Col,
-  ProgressBar
+  Col
 } from "react-bootstrap";
 
 // Document add/edit page component
@@ -80,7 +77,7 @@ export class DocumentEdit extends React.Component {
     const { dispatch } = this.props;
     return new Promise((resolve, reject) => {
       dispatch({
-        type: 'DOCUMENTS_ADD_EDIT',
+        type: 'DOCUMENT_ADD_EDIT',
         document: {
           id: values.id || 0,
           name: values.name,
@@ -112,7 +109,7 @@ const DocumentEditForm = reduxForm({
 
 // export the connected class
 function mapStateToProps(state, own_props) {
-  const document = state.documents.find(x => x.id == own_props.params.id) || {};
+  const document = state.documents.find(x => x.id ===own_props.params.id) || {};
   return {
     initialValues: document,
     document: document,

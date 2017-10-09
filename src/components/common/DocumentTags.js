@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { connect } from "react-redux";
 import { WithContext as ReactTags } from 'react-tag-input';
 
 // Document add/edit page component

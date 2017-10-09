@@ -18,7 +18,6 @@ class Filter extends React.Component {
 
   // render
   render() {
-    const tags = [];
     return (
       <DocumentTags
         ref="documentTags"
@@ -33,7 +32,7 @@ class Filter extends React.Component {
   handleAddition(tags) {
     this.props.dispatch({ type: 'SET_TAGS_FILTER', tags: tags });
     this.props.dispatch({
-      type: 'DOCUMENTS_FETCH_LIST',
+      type: 'DOCUMENT_FETCH_LIST',
       page: this.props.page,
       tags: tags,
     });
@@ -42,7 +41,7 @@ class Filter extends React.Component {
   handleDelete(tags) {
     this.props.dispatch({ type: 'SET_TAGS_FILTER', tags: tags });
     this.props.dispatch({
-      type: 'DOCUMENTS_FETCH_LIST',
+      type: 'DOCUMENT_FETCH_LIST',
       page: this.props.page,
       tags: tags,
     });
