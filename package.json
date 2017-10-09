@@ -20,7 +20,7 @@
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill --require ignore-styles",
     "test-watch": "npm test -- --watch",
     "api": "json-server --watch src/api/db.js --port 3004",
-    "backend": "export PYTHONPATH=`pwd` && python3 backend/server.py"
+    "backend": "export PYTHONPATH=`pwd` && ~/virtualenv/tagger/bin/python backend/server.py"
   },
   "babel": {
     "presets": [
@@ -33,6 +33,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
+
     "prop-types": "^15.5.10",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
@@ -42,9 +43,9 @@
     "react-router-bootstrap": "^0.23.1",
     "react-router-redux": "^4.0.7",
     "react-tag-input": "^4.7.2",
-    "redux": "^3.6.0",
-    "redux-form": "^6.4.3",
-    "redux-saga": "^0.14.3"
+    "redux": "^3.7.2",
+    "redux-form": "^7.1.0",
+    "redux-saga": "^0.15.6"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",

@@ -21,10 +21,8 @@ export default class ApiDocuments {
     for (let i = 0; i < tags.length; i++) {
       url += ('&tags=' + tags[i]);
     }
-    
-    console.log(url);
-    
-  return axios.get(url)
+
+    return axios.get(url)
       .then(response => {
         return response.data;
       })

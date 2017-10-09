@@ -45,7 +45,6 @@ export default class FormField extends React.Component {
   // the field itself
   field() {
     const { input, componentClass, type, placeholder, children } = this.props;
-    console.log('lilo ------------- input.name:' + input.name + ' input.value: ' + input.value);
     return (
       <FormControl {...input} componentClass={componentClass} type={type} placeholder={placeholder}>
         {children}

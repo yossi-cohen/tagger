@@ -113,8 +113,6 @@ const DocumentEditForm = reduxForm({
 // export the connected class
 function mapStateToProps(state, own_props) {
   const document = state.documents.find(x => x.id == own_props.params.id) || {};
-  console.log('lilo ------------------------------------- document:')
-  console.log(document);
   return {
     initialValues: document,
     document: document,
