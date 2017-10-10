@@ -6,7 +6,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin');
 var webpack = require("webpack");
 
 module.exports = {
-  //lilo: app_root: app_root, // the app root folder, needed by the other webpack configs
+  app_root: app_root, // the app root folder, needed by the other webpack configs
   entry: [
     // http://gaearon.github.io/react-hot-loader/getstarted/
     'webpack-dev-server/client?http://localhost:9090',
@@ -23,7 +23,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        include: __dirname + '/src',
         loaders: ['react-hot-loader', 'babel-loader'],
       },
       {
