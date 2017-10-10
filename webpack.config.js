@@ -23,17 +23,17 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['react-hot-loader', 'babel-loader'],
         exclude: /node_modules/,
+        loaders: ['react-hot-loader', 'babel-loader'],
       },
       {
         // https://github.com/jtangelder/sass-loader
         test: /\.scss$/,
-        loaders: ['style', 'css', 'sass'],
+        loaders: ['style-loader', 'css', 'sass'],
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css'],
+        loaders: ['style-loader', 'css'],
       }
     ],
   },

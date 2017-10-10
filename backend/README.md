@@ -19,15 +19,17 @@
 #Datamodel might not be final
 
 #python virtualenv
-- sudo apt install python3-pip
-- rm -rf ~/virtualenv/ 
-- mkdir ~/virtualenv/
+- export VENV=~/virtualenv
+- export APP=tagger
+- sudo apt install -y python3-pip python-virtualenv
+- rm -rf ${VENV} 
+- mkdir ${VENV} 
 - either:
   - python2:
-    - virtualenv --no-site-packages ~/virtualenv/tagger
+    - virtualenv --no-site-packages ${VENV}/${APP}
   - python3:
-    - virtualenv -p python3 --no-site-packages ~/virtualenv/tagger
-- cd ~/virtualenv/tagger/bin
+    - virtualenv -p python3 --no-site-packages ${VENV}/${APP}
+- cd ${VENV}/${APP}/bin
 - source activate
 - do your stuff...
   - pip3 install Spacy
@@ -35,5 +37,6 @@
   - pip3 install elasticsearch_dsl
   - pip3 install tika
   - pip3 install flask-cors
+
 - deactivate
 
